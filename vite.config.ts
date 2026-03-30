@@ -15,14 +15,24 @@ export default defineConfig(async () => ({
     tailwindcss(),
     svgr({
       svgrOptions: {
-        icon: true,
-        dimensions: false,
-        expandProps: 'start',
-        svgProps: {
-          className: 'icon',
+        exportType: 'named',
+        namedExport: 'ReactComponent',
+        plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
+        svgoConfig: {
+          plugins: [
+            {
+              name: 'preset-default',
+              params: {
+                overrides: {
+                  removeViewBox: false,
+                  convertColors: {
+                    currentColor: true,
+                  },
+                },
+              },
+            },
+          ],
         },
-        prettier: false,
-        ref: true,
       },
       include: '**/*.svg',
     }),
