@@ -1,0 +1,30 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  background-color: var(--color-status-bar);
+  color: #ffffff;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.status-bar-left,
+.status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.1s ease;
+}
+
+.status-item:hover {
+  opacity: 1;
+}

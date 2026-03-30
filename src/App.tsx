@@ -1,17 +1,44 @@
-function App() {
-  return (
-    <div className="h-screen w-screen flex flex-col">
-      <header className="h-8 bg-activity-bar flex items-center px-4 text-xs select-none">
-        Zest Code - v0.1.0 Alpha
-      </header>
-      <main className="flex-1 bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Workbench Ready</h1>
-          <p className="text-gray-500">Layout Engine initializing...</p>
-        </div>
-      </main>
-    </div>
-  )
-}
+import { type FC, useState, type KeyboardEvent } from 'react';
+import { Workbench } from '@widgets/workbench';
+import { ActivityBar } from '@widgets/activity-bar';
+import { Sidebar } from '@widgets/sidebar';
+import { MenuBar } from '@widgets/menu-bar';
+import { StatusBar } from '@widgets/status-bar';
 
-export default App
+const App: FC = () => {
+  const [activeActivity, setActiveActivity] = useState<string>('explorer');
+  const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
+
+  const handleActivityClick = (id: string) => {
+    if (id === activeActivity && sidebarVisible) {
+      setSidebarVisible(false);
+    } else {
+      setActiveActivity(id);
+      setSidebarVisible(true);
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.ctrlKey && event.key === 'b') {
+      event.preventDefault();
+      setSidebarVisible((prev: boolean) => !prev);
+    }
+  };
+
+  return (
+    <div className="app-container" onKeyDown={handleKeyDown}>
+      <MenuBar />
+      <div className="app-body">
+        <ActivityBar
+          activeItemId={activeActivity}
+          onActivityClick={handleActivityClick}
+        />
+        <Sidebar isVisible={sidebarVisible} title="EXPLORER" />
+        <Workbench />
+      </div>
+      <StatusBar />
+    </div>
+  );
+};
+
+export default App;

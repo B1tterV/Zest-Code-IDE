@@ -1,0 +1,44 @@
+.workbench-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dockview theme */
+.dockview-theme-vs {
+  --dv-theme-bg: var(--color-background);
+  --dv-theme-border: var(--color-sidebar);
+  --dv-theme-tab-bg: var(--color-sidebar);
+  --dv-theme-tab-active-bg: var(--color-background);
+  --dv-theme-tab-color: var(--color-foreground);
+  --dv-theme-tab-active-color: var(--color-foreground);
+}
+
+.dv-tabs-container {
+  background-color: var(--color-sidebar) !important;
+  border-bottom: 1px solid var(--color-activity-bar) !important;
+}
+
+.dv-tab {
+  background-color: var(--color-sidebar) !important;
+  color: var(--color-foreground) !important;
+  border-right: 1px solid var(--color-activity-bar) !important;
+}
+
+.dv-tab-active {
+  background-color: var(--color-background) !important;
+}
+
+.dv-splitter {
+  background-color: var(--color-activity-bar) !important;
+}
+
+.dv-splitter:hover {
+  background-color: var(--color-status-bar) !important;
+}
