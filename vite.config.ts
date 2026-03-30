@@ -1,18 +1,49 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from '@tailwindcss/vite';
+import svgr from 'vite-plugin-svgr';
+import { fileURLToPath, URL } from "node:url";
 
-// @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
+
+const fPath = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    svgr({
+      svgrOptions: {
+        icon: true,
+        dimensions: false,
+        expandProps: 'start',
+        svgProps: {
+          className: 'icon',
+        },
+        prettier: false,
+        ref: true,
+      },
+      include: '**/*.svg',
+    }),
+  ],
 
-  // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-  //
-  // 1. prevent Vite from obscuring rust errors
+  resolve: {
+    alias: {
+      "@app": fPath("./src/app"),
+      "@pages": fPath("./src/pages"),
+      "@widgets": fPath("./src/widgets"),
+      "@features": fPath("./src/features"),
+      "@entities": fPath("./src/entities"),
+      "@shared": fPath("./src/shared"),
+      "@icons": fPath("./src/shared/assets/icons"),
+      "@styles": fPath("./src/shared/assets/styles"),
+      "@images": fPath("./src/shared/assets/images"),
+      "@fonts": fPath("./src/shared/assets/fonts"),
+    },
+  },
+
   clearScreen: false,
-  // 2. tauri expects a fixed port, fail if that port is not available
   server: {
     port: 1420,
     strictPort: true,
@@ -25,7 +56,6 @@ export default defineConfig(async () => ({
         }
       : undefined,
     watch: {
-      // 3. tell Vite to ignore watching `src-tauri`
       ignored: ["**/src-tauri/**"],
     },
   },
