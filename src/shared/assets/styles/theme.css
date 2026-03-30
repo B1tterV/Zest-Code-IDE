@@ -1,0 +1,10 @@
+@theme {
+  --color-background: #1e1e1e;
+  --color-foreground: #cccccc;
+  --color-sidebar: #252526;
+  --color-activity-bar: #333333;
+  --color-status-bar: #007acc;
+  
+  --color-scroll-thumb: #424242;
+  --color-scroll-hover: #4f4f4f;
+}
