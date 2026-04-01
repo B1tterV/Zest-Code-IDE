@@ -5,6 +5,7 @@ import { CommandPaletteTrigger } from '@/features/command-palette';
 import { useAdaptiveMenu } from '@/features/adaptive-menu';
 import { MENU_ITEMS } from '@/entities/menu';
 import { ReactComponent as IconChevron } from "@/icons/chevron.svg";
+import { useOpenProject } from '@/features/open-project'
 
 export const MenuBar: FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -13,6 +14,7 @@ export const MenuBar: FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const { visibleItems, overflowItems } = useAdaptiveMenu(headerRef, MENU_ITEMS);
+  const { openProject } = useOpenProject();
 
   return (
     <header
@@ -26,7 +28,14 @@ export const MenuBar: FC = () => {
     >
       <nav className="flex items-center h-full flex-none">
         {visibleItems.map((item) => (
-          <MenuButton key={item.label} label={item.label} />
+          <MenuButton
+            key={item.label}
+            label={item.label}
+            onClick={() => {
+              if (item.label === 'File') openProject();
+              setActiveMenu(item.label);
+            }}
+          />
         ))}
 
         {overflowItems.length > 0 && (
