@@ -1,0 +1,1 @@
+export { useAdaptiveMenu } from './lib/useAdaptiveMenu'

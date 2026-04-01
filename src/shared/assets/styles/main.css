@@ -2,4 +2,5 @@
 
 @import "./theme.css";
 @import "./base.css";
-@import "./app.css";
+@import "./fonts.css";
+@import './utility.css'

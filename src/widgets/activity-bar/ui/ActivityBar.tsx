@@ -1,37 +1,8 @@
-import { type FC, type SVGProps } from 'react';
-import {
-  PRIMARY_ACTIVITIES,
-  SECONDARY_ACTIVITIES,
-  ACTIVITY_BAR_WIDTH,
-} from '../config/activities';
-import { type ActivityItemConfig } from '../model/types';
-import './ActivityBar.css';
-
-interface ActivityItemProps {
-  icon: FC<SVGProps<SVGSVGElement>>;
-  tooltip: string;
-  active?: boolean;
-  onClick?: () => void;
-}
-
-const ActivityItem: FC<ActivityItemProps> = ({
-  icon: Icon,
-  tooltip,
-  active = false,
-  onClick,
-}) => {
-  return (
-    <button
-      className={`activity-item ${active ? 'activity-item-active' : ''}`}
-      title={tooltip}
-      onClick={onClick}
-      type="button"
-      aria-label={tooltip}
-    >
-      <Icon className="activity-icon" />
-    </button>
-  );
-};
+import { type FC } from 'react';
+import { IconButton } from '@/shared/ui';
+import LogoImage from '@/images/logo.png';
+import { cn } from '@/shared/lib/utils';
+import { PRIMARY_ACTIVITIES, SECONDARY_ACTIVITIES, ACTIVITY_BAR_WIDTH } from '../config/activities';
 
 interface ActivityBarProps {
   className?: string;
@@ -44,37 +15,52 @@ export const ActivityBar: FC<ActivityBarProps> = ({
   activeItemId = 'explorer',
   onActivityClick,
 }) => {
-  const handleActivityClick = (id: string) => {
-    if (onActivityClick !== undefined) {
-      onActivityClick(id);
-    }
-  };
-
   return (
-    <aside className={`activity-bar ${className}`} style={{ width: ACTIVITY_BAR_WIDTH }}>
-      <nav className="activity-items" aria-label="Primary navigation">
-        {PRIMARY_ACTIVITIES.map((item: ActivityItemConfig) => (
-          <ActivityItem
+    <aside 
+      className={cn(
+        "flex flex-col items-center bg-color-second-content border-b border-border h-full flex-none ",
+        "pt-2.5 px-1.25 pb-1.25",
+        "overflow-x-hidden overflow-y-auto",
+        "scrollbar-hide",
+        className
+      )} 
+      style={{ width: ACTIVITY_BAR_WIDTH }}
+    >
+      <div className="w-10 h-10 bg-transparent flex items-center justify-center flex-none">
+        <img 
+          src={LogoImage} 
+          alt="Zest Code" 
+          className="w-7.5 h-7.5 object-contain"
+        />
+      </div>
+
+      {/* Верхняя навигация */}
+      <nav className="flex flex-col items-center w-full pt-4 gap-4" aria-label="Primary">
+        {PRIMARY_ACTIVITIES.map((item) => (
+          <IconButton
             key={item.id}
             icon={item.icon}
             tooltip={item.tooltip}
             active={item.id === activeItemId}
-            onClick={() => handleActivityClick(item.id)}
+            onClick={() => onActivityClick?.(item.id)}
+            variant="activity" 
           />
         ))}
       </nav>
-      <nav className="activity-items activity-items-bottom" aria-label="Secondary navigation">
-        {SECONDARY_ACTIVITIES.map((item: ActivityItemConfig) => (
-          <ActivityItem
+
+      {/* Нижняя навигация */}
+      <nav className="flex flex-col items-center w-full mt-auto pt-4 gap-1" aria-label="Secondary">
+        {SECONDARY_ACTIVITIES.map((item) => (
+          <IconButton
             key={item.id}
             icon={item.icon}
             tooltip={item.tooltip}
-            onClick={() => handleActivityClick(item.id)}
+            active={item.id === activeItemId}
+            onClick={() => onActivityClick?.(item.id)}
+            variant="activity"
           />
         ))}
       </nav>
     </aside>
   );
 };
-
-export default ActivityBar;
