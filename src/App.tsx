@@ -1,30 +1,26 @@
-import { type FC, useState, type KeyboardEvent } from 'react';
-import { cn } from '@/shared/lib/utils';
+import { FC, useEffect } from 'react';
 import { Workbench } from '@/widgets/workbench';
 import { ActivityBar } from '@/widgets/activity-bar';
 import { Sidebar } from '@/widgets/sidebar';
 import { MenuBar } from '@/widgets/menu-bar';
 import { StatusBar } from '@/widgets/status-bar';
+import { useLayoutStore } from '@/entities/layout';
 
 const App: FC = () => {
-  const [activeActivity, setActiveActivity] = useState<string>('explorer');
-  const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
+  const activeActivityId = useLayoutStore((s) => s.activeActivityId);
+  const isSidebarVisible = useLayoutStore((s) => s.isSidebarVisible);
+  const toggleSidebar = useLayoutStore((s) => s.toggleSidebar);
 
-  const handleActivityClick = (id: string) => {
-    if (id === activeActivity && sidebarVisible) {
-      setSidebarVisible(false);
-    } else {
-      setActiveActivity(id);
-      setSidebarVisible(true);
-    }
-  };
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.ctrlKey && event.key === 'b') {
-      event.preventDefault();
-      setSidebarVisible((prev: boolean) => !prev);
-    }
-  };
+  useEffect(() => {
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 'b') {
+        event.preventDefault();
+        toggleSidebar();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleSidebar]);
 
   return (
     <div className="
@@ -39,15 +35,12 @@ const App: FC = () => {
       <div className="
         flex flex-1 min-w-0 overflow-hidden gap-1"
       >
-        <ActivityBar
-          activeItemId={activeActivity}
-          onActivityClick={handleActivityClick}
-        />
+        <ActivityBar />
         <div className="flex flex-1 flex-col">
           <MenuBar />
           <div className="flex flex-1 overflow-hidden gap-1 pr-1">
-            {sidebarVisible && (
-              <Sidebar title={activeActivity.toUpperCase()} />
+            {isSidebarVisible && (
+              <Sidebar title={activeActivityId.toUpperCase()} />
             )}
             <Workbench isEmpty />
           </div>

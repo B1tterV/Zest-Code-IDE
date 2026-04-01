@@ -2,19 +2,13 @@ import { type FC } from 'react';
 import { IconButton } from '@/shared/ui';
 import LogoImage from '@/images/logo.png';
 import { cn } from '@/shared/lib/utils';
+import { useLayoutStore } from '@/entities/layout';
 import { PRIMARY_ACTIVITIES, SECONDARY_ACTIVITIES, ACTIVITY_BAR_WIDTH } from '../config/activities';
 
-interface ActivityBarProps {
-  className?: string;
-  activeItemId?: string;
-  onActivityClick?: (id: string) => void;
-}
+export const ActivityBar: FC = () => {
+  const activeActivityId = useLayoutStore((s) => s.activeActivityId);
+  const setActivity = useLayoutStore((s) => s.setActivity);
 
-export const ActivityBar: FC<ActivityBarProps> = ({
-  className = '',
-  activeItemId = 'explorer',
-  onActivityClick,
-}) => {
   return (
     <aside 
       className={cn(
@@ -22,7 +16,6 @@ export const ActivityBar: FC<ActivityBarProps> = ({
         "pt-2.5 px-1.25 pb-1.25",
         "overflow-x-hidden overflow-y-auto",
         "scrollbar-hide",
-        className
       )} 
       style={{ width: ACTIVITY_BAR_WIDTH }}
     >
@@ -41,8 +34,8 @@ export const ActivityBar: FC<ActivityBarProps> = ({
             key={item.id}
             icon={item.icon}
             tooltip={item.tooltip}
-            active={item.id === activeItemId}
-            onClick={() => onActivityClick?.(item.id)}
+            active={item.id === activeActivityId}
+            onClick={() => setActivity(item.id)}
             variant="activity" 
           />
         ))}
@@ -55,8 +48,8 @@ export const ActivityBar: FC<ActivityBarProps> = ({
             key={item.id}
             icon={item.icon}
             tooltip={item.tooltip}
-            active={item.id === activeItemId}
-            onClick={() => onActivityClick?.(item.id)}
+            active={item.id === activeActivityId}
+            onClick={() => setActivity(item.id)}
             variant="activity"
           />
         ))}
