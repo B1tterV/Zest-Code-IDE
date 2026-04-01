@@ -1,9 +1,10 @@
 import { type FC, useState, type KeyboardEvent } from 'react';
-import { Workbench } from '@widgets/workbench';
-import { ActivityBar } from '@widgets/activity-bar';
-import { Sidebar } from '@widgets/sidebar';
-import { MenuBar } from '@widgets/menu-bar';
-import { StatusBar } from '@widgets/status-bar';
+import { cn } from '@/shared/lib/utils';
+import { Workbench } from '@/widgets/workbench';
+import { ActivityBar } from '@/widgets/activity-bar';
+import { Sidebar } from '@/widgets/sidebar';
+import { MenuBar } from '@/widgets/menu-bar';
+import { StatusBar } from '@/widgets/status-bar';
 
 const App: FC = () => {
   const [activeActivity, setActiveActivity] = useState<string>('explorer');
@@ -26,15 +27,31 @@ const App: FC = () => {
   };
 
   return (
-    <div className="app-container" onKeyDown={handleKeyDown}>
-      <MenuBar />
-      <div className="app-body">
+    <div className="
+      flex h-screen w-screen
+      flex-col
+      overflow-hidden 
+      bg-background 
+      text-foreground 
+      select-none
+      pl-1 pb-1 gap-1"
+    >
+      <div className="
+        flex flex-1 min-w-0 overflow-hidden gap-1"
+      >
         <ActivityBar
           activeItemId={activeActivity}
           onActivityClick={handleActivityClick}
         />
-        <Sidebar isVisible={sidebarVisible} title="EXPLORER" />
-        <Workbench />
+        <div className="flex flex-1 flex-col">
+          <MenuBar />
+          <div className="flex flex-1 overflow-hidden gap-1 pr-1">
+            {sidebarVisible && (
+              <Sidebar title={activeActivity.toUpperCase()} />
+            )}
+            <Workbench isEmpty />
+          </div>
+        </div>
       </div>
       <StatusBar />
     </div>

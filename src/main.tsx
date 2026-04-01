@@ -3,10 +3,10 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 
 // Styles
-import '@shared/assets/styles/main.css'
+import '@/styles/main.css'
 
 // Features
-import { commandRegistry } from '@features/command-registry/model'
+import { commandRegistry } from '@/features/command-registry/model'
 
 const rootElement: HTMLElement | null = document.getElementById('root');
 

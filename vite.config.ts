@@ -40,16 +40,11 @@ export default defineConfig(async () => ({
 
   resolve: {
     alias: {
-      "@app": fPath("./src/app"),
-      "@pages": fPath("./src/pages"),
-      "@widgets": fPath("./src/widgets"),
-      "@features": fPath("./src/features"),
-      "@entities": fPath("./src/entities"),
-      "@shared": fPath("./src/shared"),
-      "@icons": fPath("./src/shared/assets/icons"),
-      "@styles": fPath("./src/shared/assets/styles"),
-      "@images": fPath("./src/shared/assets/images"),
-      "@fonts": fPath("./src/shared/assets/fonts"),
+      "@/icons": fPath("./src/shared/assets/icons"),
+      "@/styles": fPath("./src/shared/assets/styles"),
+      "@/images": fPath("./src/shared/assets/images"),
+      "@/fonts": fPath("./src/shared/assets/fonts"),
+      "@": fPath("./src"),
     },
   },
 
