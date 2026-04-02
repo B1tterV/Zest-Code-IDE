@@ -87,3 +87,7 @@ pub fn pick_folder(app: &AppHandle) -> Option<String> {
 pub fn read_file(path: &str) -> Result<String, String> {
     fs::read_to_string(path).map_err(|e| e.to_string())
 }
+
+pub fn save_file(path: &str, content: &str) -> Result<(), String> {
+    std::fs::write(path, content).map_err(|e| e.to_string())
+}

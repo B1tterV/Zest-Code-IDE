@@ -1,0 +1,1 @@
+export { useGlobalHotkeys } from './hooks/use-global-hotkeys'
