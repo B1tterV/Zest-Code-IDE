@@ -31,10 +31,7 @@ export const Popover: FC<PopoverProps> = ({ isOpen, onClose, anchorRef, children
   return createPortal(
     <div
       ref={popoverRef}
-      className={cn(
-        "fixed z-9999 bg-block border border-border shadow-2xl rounded-md py-1 min-w-40",
-        className
-      )}
+      className={cn("fixed z-9999", className)}
       style={{ top: rect ? rect.bottom + 4 : 0, left: rect ? rect.left : 0 }}
     >
       {children}
