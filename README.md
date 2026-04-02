@@ -1,7 +1,30 @@
-# Tauri + React + Typescript
+# ⚡ Zest Code IDE 
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+> **Zest Code** — это высокопроизводительная легковесная IDE, построенная на базе **Tauri**, **React** и **Monaco Editor**. Сочетает в себе мощь системного программирования на Rust и гибкость современных веб-технологий.
 
-## Recommended IDE Setup
+---
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+## ✨ Основные возможности (v0.2.0)
+
+*   🚀 **Ultra-fast Startup**: Запуск за миллисекунды благодаря нативной обертке Tauri.
+*   📂 **Smart Explorer**: Рекурсивное дерево файлов с поддержкой `.gitignore` и цветными иконками.
+*   🧩 **FSD Architecture**: Чистая и масштабируемая структура кода по методологии **Feature-Sliced Design**.
+*   🎨 **Custom Theme**: Эксклюзивная темная тема с акцентным цветом.
+*   🍱 **Dockview Layout**: Система вкладок и панелей с поддержкой сетки 2x2 и перетаскивания.
+*   🛠️ **Stack Detection**: Автоматическое определение технологий проекта (Tailwind, React, Vite) для умного отображения иконок.
+
+---
+
+## 🏗️ Технологический стек
+
+### Frontend
+*   **React 18** + **TypeScript**
+*   **Zustand**: Глобальное управление состоянием.
+*   **Tailwind CSS v4**: Сверхбыстрая стилизация.
+*   **Monaco Editor**: Движок редактирования кода (как в VS Code).
+*   **Dockview**: Профессиональное управление окнами и табами.
+
+### Backend (Rust)
+*   **Tauri v2**: Безопасный мост между системными API и WebView.
+*   **ignore-rs**: Высокопроизводительный обход директорий с поддержкой gitignore.
+*   **serde**: Быстрая сериализация данных между Rust и JS.
