@@ -8,6 +8,8 @@ interface EditorState {
   openTab: (tab: EditorTab) => void;
   closeTab: (id: string) => void;
   setActiveTab: (id: string) => void;
+  updateTabContent: (id: string, newContent: string) => void;
+  setSaved: (id: string) => void;
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -36,4 +38,16 @@ export const useEditorStore = create<EditorState>((set) => ({
     
     return { tabs: newTabs, activeTabId: nextActive };
   }),
+
+  updateTabContent: (id: string, newContent: string) => set((state) => ({
+    tabs: state.tabs.map(t => 
+      t.id === id ? { ...t, content: newContent, isDirty: true } : t
+    )
+  })),
+
+  setSaved: (id: string) => set((state) => ({
+    tabs: state.tabs.map(t => 
+      t.id === id ? { ...t, isDirty: false } : t
+    )
+  })),
 }));

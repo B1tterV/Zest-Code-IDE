@@ -21,3 +21,8 @@ pub async fn get_project_stack(path: String) -> Result<Vec<String>, String> {
 pub async fn read_file_content(path: String) -> Result<String, String> {
     file_system::read_file(path.as_str())
 }
+
+#[command]
+pub async fn save_file_content(path: String, content: String) -> Result<(), String> {
+    file_system::save_file(&path, &content)
+}
