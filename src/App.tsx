@@ -29,7 +29,7 @@ const App: FC = () => {
         flex flex-1 min-w-0 overflow-hidden gap-1"
       >
         <ActivityBar />
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col w-full overflow-hidden">
           <MenuBar />
           <div className="flex flex-1 overflow-hidden gap-1 pr-1">
             {isSidebarVisible && (
