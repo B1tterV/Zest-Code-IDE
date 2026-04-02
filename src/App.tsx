@@ -6,12 +6,14 @@ import { MenuBar } from '@/widgets/menu-bar';
 import { StatusBar } from '@/widgets/status-bar';
 import { useLayoutStore } from '@/entities/layout';
 import { useGlobalHotkeys } from '@/features/hotkeys';
+import { useAppHydration } from '@/features/app-initializer';
 
 const App: FC = () => {
   const activeActivityId = useLayoutStore((s) => s.activeActivityId);
   const isSidebarVisible = useLayoutStore((s) => s.isSidebarVisible);
 
   useGlobalHotkeys();
+  useAppHydration();
 
   return (
     <div className="
