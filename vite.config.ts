@@ -13,28 +13,38 @@ export default defineConfig(async () => ({
   plugins: [
     react(),
     tailwindcss(),
+    // Colors Icons
     svgr({
       svgrOptions: {
         exportType: 'named',
         namedExport: 'ReactComponent',
-        plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
         svgoConfig: {
           plugins: [
             {
               name: 'preset-default',
-              params: {
-                overrides: {
-                  removeViewBox: false,
-                  convertColors: {
-                    currentColor: true,
-                  },
-                },
-              },
+              params: { overrides: { removeViewBox: false, convertColors: false } },
             },
           ],
         },
       },
-      include: '**/*.svg',
+      include: /\.svg\?skip-colors$/,
+    }),
+    // currentColor Icons
+    svgr({
+      svgrOptions: {
+        exportType: 'named',
+        namedExport: 'ReactComponent',
+        svgoConfig: {
+          plugins: [
+            {
+              name: 'preset-default',
+              params: { overrides: { removeViewBox: false, convertColors: { currentColor: true } } },
+            },
+          ],
+        },
+      },
+      include: /\.svg$/,
+      exclude: /\.svg\?skip-colors$/,
     }),
   ],
 

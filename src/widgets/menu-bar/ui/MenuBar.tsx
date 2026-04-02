@@ -1,5 +1,5 @@
 import { FC , useState, useRef } from 'react';
-import { MenuButton, Popover, MoreButton } from '@/shared/ui';
+import { MenuButton, MoreButton } from '@/shared/ui';
 import { WindowControls } from '@/features/window-controls';
 import { CommandPaletteTrigger } from '@/features/command-palette';
 import { useAdaptiveMenu } from '@/features/adaptive-menu';
@@ -82,7 +82,7 @@ export const MenuBar: FC = () => {
               anchorRef={moreBtnRef}
               groups={overflowMenuGroups}
               onAction={(id) => {
-                console.log("Action from overflow:", id);
+                handleAction(id);
                 setIsMoreOpen(false);
               }}
             />
