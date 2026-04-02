@@ -18,7 +18,7 @@ export const IconButton: FC<IconButtonProps> = ({
 }) => {
   const variants = {
     activity: cn(
-      "w-10 h-10 flex items-center justify-center transition-all duration-150",
+      "w-8 h-8 flex items-center justify-center transition-all duration-150",
       "bg-transparent border border-transparent",
       !active && "hover:bg-gray-block-hover hover:border-gray-stroke hover:rounded-[4px]"
     ),
@@ -44,10 +44,9 @@ export const IconButton: FC<IconButtonProps> = ({
       type="button"
       {...props}
     >
-      {/* Иконка 28x28 для activity, для остальных дефолт 24x24 */}
       <Icon 
         className={cn(
-          "w-7 h-7",
+          "w-5.5 h-5.5",
           "text-white-gray transition-colors"
         )} 
       />
