@@ -3,18 +3,40 @@ import { MenuButton, Popover, MoreButton } from '@/shared/ui';
 import { WindowControls } from '@/features/window-controls';
 import { CommandPaletteTrigger } from '@/features/command-palette';
 import { useAdaptiveMenu } from '@/features/adaptive-menu';
-import { MENU_ITEMS } from '@/entities/menu';
-import { ReactComponent as IconChevron } from "@/icons/chevron.svg";
+import { MENU_ITEMS, DropdownMenu, MenuGroup } from '@/entities/menu';
+import { FILE_MENU_GROUPS } from '../config/menu';
 import { useOpenProject } from '@/features/open-project'
 
 export const MenuBar: FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const moreBtnRef = useRef<HTMLButtonElement>(null);
+  const menuButtonsRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const { visibleItems, overflowItems } = useAdaptiveMenu(headerRef, MENU_ITEMS);
   const { openProject } = useOpenProject();
+
+  const getMenuGroups = (label: string) => {
+    if (label === 'File') return FILE_MENU_GROUPS;
+    return [];
+  };
+
+  const handleAction = (id: string) => {
+    if (id === 'open_folder') openProject();
+    setActiveMenu(null);
+  };
+
+  const overflowMenuGroups: MenuGroup[] = [
+    {
+      id: 'overflow-group',
+      items: overflowItems.map((item) => ({
+        id: `overflow-${item.label}`,
+        label: item.label,
+        submenuGroups: getMenuGroups(item.label),
+      })),
+    },
+  ];
 
   return (
     <header
@@ -28,14 +50,22 @@ export const MenuBar: FC = () => {
     >
       <nav className="flex items-center h-full flex-none">
         {visibleItems.map((item) => (
-          <MenuButton
-            key={item.label}
-            label={item.label}
-            onClick={() => {
-              if (item.label === 'File') openProject();
-              setActiveMenu(item.label);
-            }}
-          />
+          <div key={item.label} className="relative h-full flex items-center">
+            <MenuButton
+              ref={(el) => { menuButtonsRefs.current[item.label] = el; }}
+              label={item.label}
+              isActive={activeMenu === item.label}
+              onClick={() => setActiveMenu(activeMenu === item.label ? null : item.label)}
+            />
+
+            <DropdownMenu
+              isOpen={activeMenu === item.label}
+              onClose={() => setActiveMenu(null)}
+              anchorRef={{ current: menuButtonsRefs.current[item.label] }}
+              groups={getMenuGroups(item.label)}
+              onAction={handleAction}
+            />
+          </div>
         ))}
 
         {overflowItems.length > 0 && (
@@ -46,22 +76,16 @@ export const MenuBar: FC = () => {
               onClick={() => setIsMoreOpen(!isMoreOpen)} 
             />
 
-            <Popover 
-              isOpen={isMoreOpen} 
-              onClose={() => setIsMoreOpen(false)} 
+            <DropdownMenu
+              isOpen={isMoreOpen}
+              onClose={() => setIsMoreOpen(false)}
               anchorRef={moreBtnRef}
-              className="p-1"
-            >
-              {overflowItems.map((item) => (
-                <button
-                  key={item.label}
-                  className="w-full flex items-center justify-between pl-2 pr-1 py-0.5 text-[13px] text-white-gray hover:bg-shared hover:text-white rounded-sm group transition-all cursor-pointer"
-                >
-                  <span>{item.label}</span>
-                  <IconChevron className="w-4 h-4 opacity-50 group-hover:opacity-100 -rotate-90" />
-                </button>
-              ))}
-            </Popover>
+              groups={overflowMenuGroups}
+              onAction={(id) => {
+                console.log("Action from overflow:", id);
+                setIsMoreOpen(false);
+              }}
+            />
           </div>
         )}
       </nav>
