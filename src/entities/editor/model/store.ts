@@ -3,6 +3,7 @@ import type { EditorTab } from './types'
 
 interface EditorState {
   tabs: EditorTab[];
+  openedIds: string[];
   activeTabId: string | null;
   
   openTab: (tab: EditorTab) => void;
@@ -14,6 +15,7 @@ interface EditorState {
 
 export const useEditorStore = create<EditorState>((set) => ({
   tabs: [],
+  openedIds: [],
   activeTabId: null,
 
   openTab: (tab) => set((state) => {
@@ -22,6 +24,7 @@ export const useEditorStore = create<EditorState>((set) => ({
     
     return { 
       tabs: [...state.tabs, tab],
+      openedIds: [...state.openedIds, tab.id],
       activeTabId: tab.id 
     };
   }),
@@ -29,20 +32,16 @@ export const useEditorStore = create<EditorState>((set) => ({
   setActiveTab: (id) => set({ activeTabId: id }),
 
   closeTab: (id) => set((state) => {
-    const newTabs = state.tabs.filter(t => t.id !== id);
-    let nextActive = state.activeTabId;
-    
-    if (state.activeTabId === id) {
-      nextActive = newTabs.length > 0 ? newTabs[newTabs.length - 1].id : null;
-    }
-    
-    return { tabs: newTabs, activeTabId: nextActive };
+     const newTabs = state.tabs.filter(t => t.id !== id);
+     return {
+       tabs: newTabs,
+       openedIds: state.openedIds.filter(oid => oid !== id),
+       activeTabId: state.activeTabId === id ? (newTabs[0]?.id || null) : state.activeTabId
+     }
   }),
 
-  updateTabContent: (id: string, newContent: string) => set((state) => ({
-    tabs: state.tabs.map(t => 
-      t.id === id ? { ...t, content: newContent, isDirty: true } : t
-    )
+  updateTabContent: (id, content) => set((state) => ({
+    tabs: state.tabs.map(t => t.id === id ? { ...t, content, isDirty: true } : t)
   })),
 
   setSaved: (id: string) => set((state) => ({

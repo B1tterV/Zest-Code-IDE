@@ -36,8 +36,6 @@ export const getFileIcon = (
   if (lowerName.includes('tailwind.config')) return IconTailwind;
   if (lowerName === 'tsconfig.json') return IconTypescriptConfig;
 
-  console.log(stack)
-
   if (ext === 'css') {
     if (stack.includes('tailwindcss')) return IconTailwind;
   }

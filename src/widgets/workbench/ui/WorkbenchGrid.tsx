@@ -8,36 +8,35 @@ const tabComponents = {
 
 export const WorkbenchGrid: FC = () => {
   const dockviewApi = useRef<DockviewApi | null>(null);
+
+  const openedIds = useEditorStore(s => s.openedIds);
   const activeTabId = useEditorStore((s) => s.activeTabId);
-  const tabs = useEditorStore((s) => s.tabs);
+  const tabs = useEditorStore(s => s.tabs);
 
   const handleReady = useCallback((event: DockviewReadyEvent) => {
     dockviewApi.current = event.api;
   }, []);
 
   useEffect(() => {
-    if (!dockviewApi.current || tabs.length === 0) return;
+    if (!dockviewApi.current) return;
 
-    tabs.forEach((tab) => {
-      const panel = dockviewApi.current?.getPanel(tab.id);
-      if (!panel) {
+    openedIds.forEach((id) => {
+      if (!dockviewApi.current?.getPanel(id)) {
+        const tabData = tabs.find(t => t.id === id);
         dockviewApi.current?.addPanel({
-          id: tab.id,
-          title: tab.title,
+          id,
+          title: tabData?.title || 'Untitled',
           component: 'editor',
-          tabComponent: 'default', 
-          params: { id: tab.id, content: tab.content },
+          tabComponent: 'default',
+          params: { id }
         });
       }
     });
 
     if (activeTabId) {
-      const panel = dockviewApi.current.getPanel(activeTabId);
-      if (panel) {
-        panel.api.setActive(); 
-      }
+      dockviewApi.current.getPanel(activeTabId)?.api.setActive();
     }
-  }, [tabs, activeTabId]);
+  }, [openedIds, activeTabId]);
 
   return (
     <div className="h-full w-full rounded-xl">
