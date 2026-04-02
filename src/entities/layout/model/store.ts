@@ -4,17 +4,20 @@ interface LayoutState {
   activeActivityId: string;
   isSidebarVisible: boolean;
   projectPath: string | null;
+  detectedStack: string[];
   
   // Actions
   setActivity: (id: string) => void;
   toggleSidebar: (force?: boolean) => void;
-  setProjectPath: (path: string | null) => void;
+  setProject: (path: string, deps: string[]) => void;
+  resetProject: () => void;
 }
 
 export const useLayoutStore = create<LayoutState>((set) => ({
   activeActivityId: 'explorer',
   isSidebarVisible: true,
   projectPath: null,
+  detectedStack: [],
 
   setActivity: (id) => set((state) => {
     if (state.activeActivityId === id) {
@@ -27,5 +30,22 @@ export const useLayoutStore = create<LayoutState>((set) => ({
     isSidebarVisible: force !== undefined ? force : !state.isSidebarVisible 
   })),
 
-  setProjectPath: (path) => set({ projectPath: path }),
+  setProject: (path, deps) => set({ 
+    projectPath: path, 
+    detectedStack: deps,
+    activeActivityId: 'explorer',
+    isSidebarVisible: true 
+  }),
+
+  resetProject: () => set({ 
+    projectPath: null, 
+    detectedStack: [], 
+    isSidebarVisible: false 
+  }),
 }));
+
+export const getProjectName = (path: string | null) => {
+  if (!path) return 'No Folder Opened';
+  const cleanPath = path.replace(/[\\/]$/, '');
+  return cleanPath.split(/[\\/]/).pop() || cleanPath;
+};
