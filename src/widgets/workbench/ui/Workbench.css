@@ -1,44 +1,41 @@
-.workbench-container {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
+.dockview {
+    --dv-tabs-and-actions-container-background-color: var(--color-content) !important;
+    --dv-activegroup-hiddenpanel-tab-background-color: var(--color-content) !important;
+    --dv-tab-divider-color: transparent;
+    --dv-tabs-and-actions-container-height: 35px;
+    --dv-group-view-background-color: var(--color-content);
+    --dv-activegroup-visiblepanel-tab-background-color: transparent !important;
+    --dv-group-view-background-color: var(--color-content);
 }
 
-.editor-panel {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Dockview theme */
-.dockview-theme-vs {
-  --dv-theme-bg: var(--color-background);
-  --dv-theme-border: var(--color-sidebar);
-  --dv-theme-tab-bg: var(--color-sidebar);
-  --dv-theme-tab-active-bg: var(--color-background);
-  --dv-theme-tab-color: var(--color-foreground);
-  --dv-theme-tab-active-color: var(--color-foreground);
-}
-
-.dv-tabs-container {
-  background-color: var(--color-sidebar) !important;
-  border-bottom: 1px solid var(--color-activity-bar) !important;
+.dv-tab:focus,
+.dv-tab:focus-within,
+.dv-tab-content:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .dv-tab {
-  background-color: var(--color-sidebar) !important;
-  color: var(--color-foreground) !important;
-  border-right: 1px solid var(--color-activity-bar) !important;
+    outline: none !important;
+    border: none !important;
 }
 
-.dv-tab-active {
-  background-color: var(--color-background) !important;
+.dv-tab:after,
+.dv-tab:before {
+    display: none !important;
 }
 
-.dv-splitter {
-  background-color: var(--color-activity-bar) !important;
+.dv-tab.dv-active-tab {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
-.dv-splitter:hover {
-  background-color: var(--color-status-bar) !important;
+.dv-tab {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+}
+
+.dv-tabs-and-actions-container {
+    border-radius: 4px 4px 0 0 !important;
+    overflow: hidden;
 }
