@@ -4,9 +4,11 @@ import { cn } from '@/shared/lib/utils';
 import { useFileStore, getFileIcon } from '@/entities/file';
 import { useLoadTree } from '@/features/file-explorer';
 import { useLayoutStore } from '@/entities/layout'
+import { useOpenFile } from '@/features/editor';
 
 export const FileTree: FC<{ nodes: any[]; level?: number }> = ({ nodes, level = 0 }) => {
   const { expandFolder } = useLoadTree();
+	const { openFile } = useOpenFile();
   const toggleFolder = useFileStore(s => s.toggleFolder);
 
 	const detectedStack = useLayoutStore(s => s.detectedStack);
@@ -28,7 +30,7 @@ export const FileTree: FC<{ nodes: any[]; level?: number }> = ({ nodes, level = 
                 if (node.is_dir) {
                   node.isOpen ? toggleFolder(node.path) : expandFolder(node.path);
                 } else {
-                   console.log("Opening file:", node.path);
+                  openFile(node.path, node.name);
                 }
               }}
             >

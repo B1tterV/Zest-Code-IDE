@@ -1,0 +1,1 @@
+export { useOpenFile } from './model/use-open-file'
