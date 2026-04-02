@@ -1,0 +1,5 @@
+export const SIDEBAR_DEFAULT_WIDTH = 380;
+export const SIDEBAR_MIN_WIDTH = 170;
+export const SIDEBAR_MAX_WIDTH = 400;
+export const SIDEBAR_HEADER_HEIGHT = 20;
+export const DEFAULT_SIDEBAR_TITLE = 'EXPLORER';

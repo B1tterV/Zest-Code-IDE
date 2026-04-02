@@ -1,0 +1,34 @@
+@theme {
+  /* Базовые цвета */
+  --color-content: #242424;
+  --color-line: #242424;
+  --color-background: #0a0a0a;
+  --color-shared: #383838;
+  --color-border: #2C2C2C;
+  
+  /* Блоки и интерактив */
+  --color-block: #1A1A1A;
+  --color-gray-block: #383838;
+  --color-gray-block-hover: #262626;
+  --color-gray-stroke: #4B4B4B;
+  --color-inactive-gray: #858487;
+  --color-accent-teal: #385E5C;
+  --color-accent-teal-hover: #2d827d;
+  
+  /* Текст и контент */
+  --color-white: #FFFFFF;
+  --color-white-gray: #CFCFCF;
+  --color-second-content: #151515;
+
+  /* Статусы */
+  --color-error: #FF7373;
+  --color-red: #C82121;
+  --color-warning: #DADA4E;
+
+  /* Скроллбар */
+  --color-scroll-thumb: #424242;
+  --color-scroll-hover: #4f4f4f;
+
+  /* Шрифт */
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

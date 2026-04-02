@@ -1,51 +1,54 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { FC, useEffect } from 'react';
+import { Workbench } from '@/widgets/workbench';
+import { ActivityBar } from '@/widgets/activity-bar';
+import { Sidebar } from '@/widgets/sidebar';
+import { MenuBar } from '@/widgets/menu-bar';
+import { StatusBar } from '@/widgets/status-bar';
+import { useLayoutStore } from '@/entities/layout';
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+const App: FC = () => {
+  const activeActivityId = useLayoutStore((s) => s.activeActivityId);
+  const isSidebarVisible = useLayoutStore((s) => s.isSidebarVisible);
+  const toggleSidebar = useLayoutStore((s) => s.toggleSidebar);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  useEffect(() => {
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 'b') {
+        event.preventDefault();
+        toggleSidebar();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleSidebar]);
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
+    <div className="
+      flex h-screen w-screen
+      flex-col
+      overflow-hidden 
+      bg-background 
+      text-foreground 
+      select-none
+      pl-1 pb-1 gap-1"
+    >
+      <div className="
+        flex flex-1 min-w-0 overflow-hidden gap-1"
       >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+        <ActivityBar />
+        <div className="flex flex-1 flex-col">
+          <MenuBar />
+          <div className="flex flex-1 overflow-hidden gap-1 pr-1">
+            {isSidebarVisible && (
+              <Sidebar title={activeActivityId.toUpperCase()} />
+            )}
+            <Workbench />
+          </div>
+        </div>
+      </div>
+      <StatusBar />
+    </div>
   );
-}
+};
 
 export default App;

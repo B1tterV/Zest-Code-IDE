@@ -1,0 +1,39 @@
+@layer base {
+  html {
+    forced-color-adjust: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -ms-interpolation-mode: sRGB;
+    font-family: var(--font-mono);
+    overflow: overlay; 
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background);
+    color: var(--color-white);
+    overflow: hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--color-background);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-scroll-thumb);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-scroll-hover);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+}

@@ -18,7 +18,17 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Paths */
+    "baseUrl": ".",
+    "paths": {
+      "@/icons/*": ["./src/shared/assets/icons/*"],
+      "@/styles/*": ["./src/shared/assets/styles/*"],
+      "@/images/*": ["./src/shared/assets/images/*"],
+      "@/fonts/*": ["./src/shared/assets/fonts/*"],
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
