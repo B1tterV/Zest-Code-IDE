@@ -42,7 +42,7 @@ const App: FC = () => {
             {isSidebarVisible && (
               <Sidebar title={activeActivityId.toUpperCase()} />
             )}
-            <Workbench isEmpty />
+            <Workbench />
           </div>
         </div>
       </div>

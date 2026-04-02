@@ -1,22 +1,68 @@
 import { FC } from 'react';
 import { IDockviewPanelProps } from 'dockview-react';
+import { CodeEditor } from '@/shared/ui';
+import { useEditorStore } from '../model/store';
 
-export const EditorPanel: FC<IDockviewPanelProps> = (props) => {
-  const { tabId, filePath, language } = props.params;
+const LANGUAGE_MAP: Record<string, string> = {
+  // Frontend
+  'tsx': 'typescript',
+  'ts': 'typescript',
+  'jsx': 'javascript',
+  'js': 'javascript',
+  'html': 'html',
+  'css': 'css',
+  'scss': 'scss',
+  'less': 'less',
+  'vue': 'html',
+  
+  // Backend & Systems
+  'rs': 'rust',
+  'py': 'python',
+  'cpp': 'cpp',
+  'cc': 'cpp',
+  'h': 'cpp',
+  'hpp': 'cpp',
+  'cs': 'csharp',
+  'go': 'go',
+  'java': 'java',
+  'php': 'php',
+  'sql': 'sql',
+
+  // Configs & Data
+  'json': 'json',
+  'md': 'markdown',
+  'yaml': 'yaml',
+  'yml': 'yaml',
+  'toml': 'toml',
+  'xml': 'xml',
+  'bat': 'bat',
+  'sh': 'shell',
+  'dockerfile': 'dockerfile',
+};
+
+function getLanguageByExt(filename: string): string {
+  const ext = filename.split('.').pop()?.toLowerCase();
+  
+  return (ext && LANGUAGE_MAP[ext]) || 'plaintext';
+}
+
+export const EditorPanel: FC<IDockviewPanelProps> = ({ params }) => {
+  const tab = useEditorStore(s => s.tabs.find(t => t.id === params.id));
+
+  if (!tab) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-background text-inactive-gray italic text-[13px]">
+        Loading file...
+      </div>
+    );
+  }
 
   return (
-    <div className="editor-panel h-full w-full bg-background border-t border-l border-border/10">
-      <div className="p-4 text-foreground/70 text-sm">
-        <span className="font-semibold text-foreground">Editor:</span> {tabId}
-        {filePath && (
-          <span className="ml-2 text-muted-foreground italic">{filePath}</span>
-        )}
-        {language && (
-          <span className="ml-2 text-[10px] bg-secondary px-1.5 py-0.5 rounded uppercase tracking-wider">
-            {language}
-          </span>
-        )}
-      </div>
+    <div className="h-full w-full bg-content overflow-hidden rounded-b-xl">
+      <CodeEditor 
+        value={tab.content} 
+        language={getLanguageByExt(tab.title)} 
+      />
     </div>
   );
 };

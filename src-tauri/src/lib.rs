@@ -14,7 +14,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
            commands::project::open_project_picker,
            commands::project::get_project_files,
-           commands::project::get_project_stack
+           commands::project::get_project_stack,
+           commands::project::read_file_content
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

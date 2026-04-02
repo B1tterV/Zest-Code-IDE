@@ -83,3 +83,7 @@ pub fn pick_folder(app: &AppHandle) -> Option<String> {
         .blocking_pick_folder()
         .map(|path| path.to_string())
 }
+
+pub fn read_file(path: &str) -> Result<String, String> {
+    fs::read_to_string(path).map_err(|e| e.to_string())
+}
