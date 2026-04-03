@@ -6,6 +6,7 @@ interface FileState {
   isCreating: 'file' | 'folder' | null;
   isRenaming: string | null;
   createPath: string | null;
+  cutPath: string | null;
 
   setTree: (tree: FileNode[]) => void;
   toggleFolder: (path: string, children?: FileNode[]) => void;
@@ -13,6 +14,7 @@ interface FileState {
   removeNode: (path: string) => void;
   setRenaming: (path: string | null) => void;
   updateFolderChildren: (path: string, children: FileNode[]) => void;
+  setCutPath: (path: string | null) => void;
 }
 
 export const useFileStore = create<FileState>((set) => ({
@@ -20,6 +22,7 @@ export const useFileStore = create<FileState>((set) => ({
   isCreating: null,
   isRenaming: null,
   createPath: null,
+  cutPath: null,
 
   setTree: (tree) => set({ tree }),
   toggleFolder: (path, children) => set((state) => ({
@@ -33,6 +36,7 @@ export const useFileStore = create<FileState>((set) => ({
   updateFolderChildren: (path, children) => set((state) => ({
     tree: patchRecursive(state.tree, path, children)
   })),
+  setCutPath: (path) => set({ cutPath: path }),
 }));
 
 function updateRecursive(nodes: FileNode[], path: string, children?: FileNode[]): FileNode[] {
@@ -56,13 +60,20 @@ function removeRecursive(nodes: FileNode[], targetPath: string): FileNode[] {
     }));
 }
 
-function patchRecursive(nodes: FileNode[], path: string, children: FileNode[]): FileNode[] {
+function patchRecursive(nodes: FileNode[], path: string, newChildren: FileNode[]): FileNode[] {
   return nodes.map(node => {
     if (node.path === path) {
-      return { ...node, children };
+      return { 
+        ...node, 
+        isOpen: node.isOpen,
+        children: newChildren.map(newChild => {
+          const existingChild = node.children?.find(c => c.path === newChild.path);
+          return existingChild ? { ...newChild, isOpen: existingChild.isOpen, children: existingChild.children } : newChild;
+        }) 
+      };
     }
     if (node.children) {
-      return { ...node, children: patchRecursive(node.children, path, children) };
+      return { ...node, children: patchRecursive(node.children, path, newChildren) };
     }
     return node;
   });

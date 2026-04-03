@@ -6,6 +6,7 @@ import { ReactComponent as IconCollapseAll } from '@/icons/collapse-all.svg'
 import { ReactComponent as IconChevron } from "@/icons/chevron.svg";
 import { cn } from '@/shared/lib/utils';
 import { useFileStore } from '@/entities/file';
+import { useLayoutStore } from '@/entities/layout';
 
 interface FileTreeHeaderProps {
   title: string;
@@ -23,6 +24,7 @@ export const FileTreeHeader: FC<FileTreeHeaderProps> = ({
   onCollapse 
 }) => {
   const setCreating = useFileStore(s => s.setCreating);
+  const projectPath = useLayoutStore(s => s.projectPath);
 
   const actionBtnClass = "p-1 hover:bg-shared rounded-sm text-inactive-gray hover:text-white-gray transition-colors cursor-pointer";
 
@@ -50,7 +52,7 @@ export const FileTreeHeader: FC<FileTreeHeaderProps> = ({
           title="New File"
           onClick={(e) => {
             e.stopPropagation();
-            setCreating('file');
+            setCreating('file', projectPath);
           }}
         >
           <IconFileNew width={16} height={16} />
@@ -60,7 +62,7 @@ export const FileTreeHeader: FC<FileTreeHeaderProps> = ({
           title="New Folder"
           onClick={(e) => {
             e.stopPropagation();
-            setCreating('folder');
+            setCreating('folder', projectPath);
           }}
         >
           <IconFolderAdd width={16} height={16} />
