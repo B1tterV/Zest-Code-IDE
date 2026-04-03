@@ -1,4 +1,4 @@
-import { FC, useState, KeyboardEvent } from 'react';
+import { FC, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { useFileStore } from '@/entities/file';
 import { useLayoutStore } from '@/entities/layout';

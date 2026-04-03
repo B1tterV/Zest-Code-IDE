@@ -1,7 +1,7 @@
 import { FC, memo } from 'react';
 import { ReactComponent as IconChevron } from "@/icons/chevron.svg";
 import { cn } from '@/shared/lib/utils';
-import { getFileIcon } from '@/entities/file';
+import { getFileIcon, useFileStore } from '@/entities/file';
 import { FileInput } from '@/shared/ui';
 
 interface FileTreeNodeProps {
@@ -27,13 +27,15 @@ export const FileTreeNode: FC<FileTreeNodeProps> = memo(({
   onCancelRename,
 }) => {
   const Icon = getFileIcon(node.name, node.is_dir, node.isOpen, detectedStack);
+  const cutPath = useFileStore(s => s.cutPath);
 
   return (
     <div 
       style={{ paddingLeft: `${level * 12 + 8}px` }}
       className={cn(
         "group flex items-center h-5.5 w-full gap-1.5 cursor-pointer transition-colors",
-        "hover:bg-[#2a2d2e] text-[#cccccc] hover:text-white"
+        "hover:bg-[#2a2d2e] text-[#cccccc] hover:text-white",
+        node.path === cutPath ? "opacity-50 grayscale-[0.5]" : "opacity-100",
       )}
       onClick={onOpen}
       onContextMenu={onContextMenu}
