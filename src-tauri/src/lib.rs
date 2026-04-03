@@ -23,7 +23,8 @@ pub fn run() {
             commands::project::delete_file_item,
             commands::project::rename_file_item,
             commands::project::reveal_item_in_explorer,
-            commands::project::copy_file_item
+            commands::project::copy_file_item,
+            commands::search::search_in_files
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
