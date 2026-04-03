@@ -5,17 +5,22 @@ import { cn } from '@/shared/lib/utils';
 interface PopoverProps {
   isOpen: boolean;
   onClose: () => void;
-  anchorRef: React.RefObject<HTMLElement | null>;
+  anchorRef?: React.RefObject<HTMLElement | null>;
+  position?: { x: number; y: number } | null;
   children: ReactNode;
   className?: string;
 }
 
-export const Popover: FC<PopoverProps> = ({ isOpen, onClose, anchorRef, children, className }) => {
+export const Popover: FC<PopoverProps> = ({ isOpen, onClose, anchorRef, position, children, className }) => {
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      if (!popoverRef.current?.contains(e.target as Node) && !anchorRef.current?.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const clickedOutsidePopover = !popoverRef.current?.contains(target);
+      const clickedOutsideAnchor = !anchorRef?.current?.contains(target);
+
+      if (clickedOutsidePopover && clickedOutsideAnchor) {
         onClose();
       }
     };
@@ -25,14 +30,20 @@ export const Popover: FC<PopoverProps> = ({ isOpen, onClose, anchorRef, children
 
   if (!isOpen) return null;
 
-  // Рассчитываем позицию под кнопкой
-  const rect = anchorRef.current?.getBoundingClientRect();
+  let style: React.CSSProperties = { position: 'fixed', zIndex: 9999 };
+
+  if (position) {
+    style = { ...style, top: position.y, left: position.x };
+  } else if (anchorRef?.current) {
+    const rect = anchorRef.current.getBoundingClientRect();
+    style = { ...style, top: rect.bottom + 4, left: rect.left };
+  }
   
   return createPortal(
     <div
       ref={popoverRef}
-      className={cn("fixed z-9999", className)}
-      style={{ top: rect ? rect.bottom + 4 : 0, left: rect ? rect.left : 0 }}
+      className={cn("fixed", className)}
+      style={style}
     >
       {children}
     </div>,

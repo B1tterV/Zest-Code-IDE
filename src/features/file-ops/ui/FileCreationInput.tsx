@@ -6,12 +6,16 @@ import { useLoadTree } from '@/features/file-explorer';
 import { getFileIcon } from '@/entities/file';
 import { FileInput } from '@/shared/ui';
 
-export const FileCreationInput: FC<{ level: number }> = ({ level }) => {
+export const FileCreationInput: FC<{ level: number, parentPath: string | null }> = ({ level, parentPath }) => {
   const [name, setName] = useState('');
   const isCreating = useFileStore(s => s.isCreating);
-  const setCreating = useFileStore(s => s.setCreating);
   const projectPath = useLayoutStore(s => s.projectPath);
+  const targetPath = parentPath || projectPath;
+
+  const { updateFolderChildren } = useFileStore();
   const { loadInitial } = useLoadTree();
+
+  const setCreating = useFileStore(s => s.setCreating);
 
   const Icon = getFileIcon(name || (isCreating === 'file' ? 'f.txt' : 'folder'), isCreating === 'folder');
 
@@ -25,8 +29,16 @@ export const FileCreationInput: FC<{ level: number }> = ({ level }) => {
     const separator = projectPath.includes('\\') ? '\\' : '/';
     
     try {
-      await invoke(command, { path: `${projectPath}${separator}${name}` });
-      await loadInitial(projectPath);
+      const fullPath = `${targetPath}${separator}${name}`;
+
+      await invoke(command, { path: fullPath });
+      
+      const updatedFiles = await invoke<any[]>('get_project_files', { path: targetPath });
+      if (targetPath === projectPath) {
+        await loadInitial(projectPath);
+      } else {
+        updateFolderChildren(targetPath!, updatedFiles);
+      }
     } catch (err) {
       console.error("Creation failed:", err);
     } finally {
