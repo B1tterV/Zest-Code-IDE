@@ -5,16 +5,21 @@ import { useFileStore, getFileIcon } from '@/entities/file';
 import { useLoadTree } from '@/features/file-explorer';
 import { useLayoutStore } from '@/entities/layout'
 import { useOpenFile } from '@/features/editor';
+import { FileCreationInput } from '@/features/file-ops';
 
 export const FileTree: FC<{ nodes: any[]; level?: number }> = ({ nodes, level = 0 }) => {
   const { expandFolder } = useLoadTree();
 	const { openFile } = useOpenFile();
   const toggleFolder = useFileStore(s => s.toggleFolder);
 
+  const isCreating = useFileStore(s => s.isCreating);
 	const detectedStack = useLayoutStore(s => s.detectedStack);
 
   return (
     <div className="flex flex-col w-full">
+      {level === 0 && isCreating && (
+        <FileCreationInput level={level} />
+      )}
       {nodes.map((node) => {
         const Icon = getFileIcon(node.name, node.is_dir, node.isOpen, detectedStack);
         
