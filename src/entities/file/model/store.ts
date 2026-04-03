@@ -8,6 +8,7 @@ interface FileState {
   setTree: (tree: FileNode[]) => void;
   toggleFolder: (path: string, children?: FileNode[]) => void;
   setCreating: (type: 'file' | 'folder' | null) => void;
+  removeNode: (path: string) => void;
 }
 
 export const useFileStore = create<FileState>((set) => ({
@@ -19,6 +20,9 @@ export const useFileStore = create<FileState>((set) => ({
     tree: updateRecursive(state.tree, path, children)
   })),
   setCreating: (type) => set({ isCreating: type }),
+  removeNode: (path: string) => set((state) => ({
+    tree: removeRecursive(state.tree, path)
+  })),
 }));
 
 function updateRecursive(nodes: FileNode[], path: string, children?: FileNode[]): FileNode[] {
@@ -31,4 +35,13 @@ function updateRecursive(nodes: FileNode[], path: string, children?: FileNode[])
     }
     return node;
   });
+}
+
+function removeRecursive(nodes: FileNode[], targetPath: string): FileNode[] {
+  return nodes
+    .filter(node => node.path !== targetPath)
+    .map(node => ({
+      ...node,
+      children: node.children ? removeRecursive(node.children, targetPath) : undefined
+    }));
 }
