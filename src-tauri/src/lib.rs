@@ -19,7 +19,8 @@ pub fn run() {
            commands::project::save_file_content,
            commands::project::create_new_file,
            commands::project::create_new_directory,
-           commands::project::delete_file_item
+           commands::project::delete_file_item,
+           commands::project::rename_file_item
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

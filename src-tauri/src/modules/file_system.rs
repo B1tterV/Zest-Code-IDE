@@ -110,3 +110,7 @@ pub fn remove_item(path: &str) -> Result<(), String> {
         fs::remove_file(path).map_err(|e| e.to_string())
     }
 }
+
+pub fn rename_item(old_path: &str, new_path: &str) -> Result<(), String> {
+    fs::rename(old_path, new_path).map_err(|e| e.to_string())
+}
