@@ -91,3 +91,13 @@ pub fn read_file(path: &str) -> Result<String, String> {
 pub fn save_file(path: &str, content: &str) -> Result<(), String> {
     std::fs::write(path, content).map_err(|e| e.to_string())
 }
+
+pub fn create_file(path: &str) -> Result<(), String> {
+    fs::File::create(path).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+pub fn create_directory(path: &str) -> Result<(), String> {
+    fs::create_dir_all(path).map_err(|e| e.to_string())?;
+    Ok(())
+}

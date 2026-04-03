@@ -26,3 +26,13 @@ pub async fn read_file_content(path: String) -> Result<String, String> {
 pub async fn save_file_content(path: String, content: String) -> Result<(), String> {
     file_system::save_file(&path, &content)
 }
+
+#[command]
+pub async fn create_new_file(path: String) -> Result<(), String> {
+    file_system::create_file(&path)
+}
+
+#[command]
+pub async fn create_new_directory(path: String) -> Result<(), String> {
+    file_system::create_directory(&path)
+}
