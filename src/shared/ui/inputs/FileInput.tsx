@@ -35,14 +35,25 @@ export const FileInput: FC<FileInputProps> = ({
     if (e.key === 'Escape') onCancel();
   };
 
+  const handleBlur = () => {
+    const value = inputRef.current?.value.trim();
+    if (value && value !== defaultValue) {
+      onConfirm(value);
+    } else {
+      onCancel();
+    }
+  };
+
   return (
     <input
       ref={inputRef}
       defaultValue={defaultValue}
       onChange={(e) => onChange?.(e.target.value)}
       onKeyDown={handleKeyDown}
-      onBlur={onCancel}
+      onBlur={handleBlur}
       onClick={(e) => e.stopPropagation()}
+      autoComplete="off"
+      spellCheck={false}
       className={cn(
         "bg-block border border-accent-teal outline-none text-[13px] w-full px-1 h-4.5 text-white shadow-xl",
         className

@@ -6,18 +6,22 @@ import { Popover } from '@/shared/ui';
 
 interface Props {
   groups: MenuGroup[];
-  onAction: (id: string) => void;
   isOpen?: boolean;
-  onClose?: () => void;
   anchorRef?: React.RefObject<HTMLElement | null>;
+  position?: { x: number; y: number } | null;
+
+  onAction: (id: string) => void;
+  onClose?: () => void;
 }
 
 export const DropdownMenu: FC<Props> = ({ 
   groups, 
-  onAction, 
   isOpen, 
-  onClose, 
-  anchorRef 
+  anchorRef,
+  position,
+
+  onAction, 
+  onClose
 }) => {
   const content = (
     <div className="min-w-70 bg-block border border-border shadow-lg rounded-md py-1 animate-in fade-in zoom-in-95 duration-100">
@@ -60,9 +64,9 @@ export const DropdownMenu: FC<Props> = ({
     </div>
   );
 
-	if (anchorRef && onClose && isOpen !== undefined) {
+	if ((anchorRef || position) && onClose && isOpen !== undefined) {
     return (
-      <Popover isOpen={isOpen} onClose={onClose} anchorRef={anchorRef}>
+      <Popover isOpen={isOpen} onClose={onClose} anchorRef={anchorRef} position={position}>
         {content}
       </Popover>
     );
