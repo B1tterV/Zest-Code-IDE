@@ -6,7 +6,7 @@ import { useOpenFile } from '@/features/editor';
 import { FileCreationInput, getFileContextMenu, useDeleteFile, useRenameFile } from '@/features/file-ops';
 import { DropdownMenu } from '@/entities/menu';
 import { useFileTreeActions } from '../lib/use-file-tree-actions';
-import { FileTreeNode } from '@/widgets/sidebar/ui/FileTreeNode';
+import { FileTreeNode } from './FileTreeNode';
 
 export const FileTree: FC<{ nodes: any[]; level?: number }> = ({ nodes, level = 0 }) => {
   const isRenaming = useFileStore(s => s.isRenaming);

@@ -3,4 +3,39 @@
 @import "./theme.css";
 @import "./base.css";
 @import "./fonts.css";
-@import './utility.css'
+@import './utility.css';
+
+.custom-scrollbar {
+  /* Ширина скроллбара */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scroll-thumb) transparent;
+}
+
+/* Chrome, Edge, Safari */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px; /* Очень тонкий */
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-scroll-thumb);
+  border-radius: 10px; /* Максимально округлый */
+  border: 1px solid transparent; /* Отступ от краев */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-scroll-hover);
+}
+
+/* Скрываем скроллбар по умолчанию и показываем при наведении на контейнер */
+.scrollbar-hide-auto::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.scrollbar-hide-auto:hover::-webkit-scrollbar-thumb {
+  background-color: var(--color-scroll-thumb);
+}

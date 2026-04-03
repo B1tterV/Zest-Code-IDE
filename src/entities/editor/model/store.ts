@@ -6,6 +6,7 @@ interface EditorState {
   tabs: EditorTab[];
   openedIds: string[];
   activeTabId: string | null;
+  scrollTarget: { path: string; line: number } | null;
   
   openTab: (tab: EditorTab) => void;
   closeTab: (id: string) => void;
@@ -13,6 +14,7 @@ interface EditorState {
   updateTabContent: (id: string, newContent: string) => void;
   setSaved: (id: string) => void;
   renameTab: (oldId: string, newId: string, newTitle: string) => void;
+  setScrollTarget: (target: { path: string; line: number } | null) => void;
 }
 
 export const useEditorStore = create<EditorState>()(
@@ -21,6 +23,7 @@ export const useEditorStore = create<EditorState>()(
       tabs: [],
       openedIds: [],
       activeTabId: null,
+      scrollTarget: null,
 
       openTab: (tab) => set((state) => {
         const exists = state.tabs.find(t => t.id === tab.id);
@@ -61,6 +64,8 @@ export const useEditorStore = create<EditorState>()(
         openedIds: state.openedIds.map(id => id === oldId ? newId : id),
         activeTabId: state.activeTabId === oldId ? newId : state.activeTabId
       })),
+
+      setScrollTarget: (scrollTarget) => set({ scrollTarget }),
     }),
     {
       name: 'zest-editor-storage',

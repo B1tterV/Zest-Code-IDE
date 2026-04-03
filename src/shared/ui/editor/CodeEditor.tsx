@@ -1,17 +1,35 @@
 import { FC, useEffect, useRef, memo } from 'react';
 import * as monaco from 'monaco-editor';
+import { useEditorStore } from '@/entities/editor';
 
 interface Props {
+  path: string;
   value: string;
   language: string;
   onChange?: (value: string) => void;
 }
 
-export const CodeEditor: FC<Props> = memo(({ value, language, onChange }) => {
+export const CodeEditor: FC<Props> = memo(({ path, value, language, onChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-
   const initialValue = useRef(value);
+
+  const scrollTarget = useEditorStore(s => s.scrollTarget);
+  const setScrollTarget = useEditorStore(s => s.setScrollTarget);
+
+  useEffect(() => {
+    if (editorRef.current && scrollTarget && scrollTarget.path === path) {
+      const { line } = scrollTarget;
+
+      editorRef.current.revealLineInCenter(line);
+      editorRef.current.setPosition({ lineNumber: line, column: 1 });
+      
+      setTimeout(() => {
+        editorRef.current?.focus();
+        setScrollTarget(null);
+      }, 50);
+    }
+  }, [scrollTarget, path]);
 
   monaco.editor.defineTheme('zest-dark-theme', {
     base: 'vs-dark',
