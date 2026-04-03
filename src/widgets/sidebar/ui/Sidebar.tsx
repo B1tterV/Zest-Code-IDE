@@ -12,6 +12,7 @@ import { useLayoutStore, getProjectName } from '@/entities/layout';
 import { useFileStore } from '@/entities/file';
 import { FileTree } from './FileTree'
 import { FileTreeHeader } from './FileTreeHeader'
+import { SearchSidebar } from '@/features/global-search';
 
 interface SidebarProps {
   className?: string;
