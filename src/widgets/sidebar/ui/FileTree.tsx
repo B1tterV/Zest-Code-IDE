@@ -6,16 +6,21 @@ import { useFileStore, getFileIcon } from '@/entities/file';
 import { useLoadTree } from '@/features/file-explorer';
 import { useLayoutStore } from '@/entities/layout'
 import { useOpenFile } from '@/features/editor';
-import { FileCreationInput, useDeleteFile } from '@/features/file-ops';
+import { FileCreationInput, useDeleteFile, useRenameFile } from '@/features/file-ops';
+import { FileInput } from '@/shared/ui';
 
 export const FileTree: FC<{ nodes: any[]; level?: number }> = ({ nodes, level = 0 }) => {
+  const isRenaming = useFileStore(s => s.isRenaming);
+  const isCreating = useFileStore(s => s.isCreating);
+	const detectedStack = useLayoutStore(s => s.detectedStack);
+  const projectPath = useLayoutStore(s => s.projectPath);
+
   const { expandFolder } = useLoadTree();
 	const { openFile } = useOpenFile();
   const toggleFolder = useFileStore(s => s.toggleFolder);
   const { deleteItem } = useDeleteFile();
-
-  const isCreating = useFileStore(s => s.isCreating);
-	const detectedStack = useLayoutStore(s => s.detectedStack);
+  const setRenaming = useFileStore(s => s.setRenaming);
+  const { renameItem } = useRenameFile();
 
   return (
     <div className="flex flex-col w-full">
@@ -49,13 +54,27 @@ export const FileTree: FC<{ nodes: any[]; level?: number }> = ({ nodes, level = 
               </div>
 
               <Icon className="w-4 h-4 flex-none" /> 
+              
 
-							<span className={cn(
-                "text-[13px] truncate transition-opacity",
-                node.is_ignored ? "opacity-40" : "opacity-100",
-							)}>
-                {node.name}
-							</span>
+              {isRenaming === node.path ? (
+                <FileInput
+                  defaultValue={node.name}
+                  onConfirm={(newName) => {
+                    if (newName && newName !== node.name) {
+                      renameItem(node.path, newName, projectPath!);
+                    }
+                    setRenaming(null);
+                  }}
+                  onCancel={() => setRenaming(null)}
+                />
+              ) : (
+                <span className={cn(
+                  "text-[13px] truncate transition-opacity",
+                  node.is_ignored ? "opacity-40" : "opacity-100",
+                )}>
+                  {node.name}
+                </span>
+              )}
 
               <button 
                 className="opacity-0 group-hover:opacity-100 p-1 hover:bg-shared rounded-sm ml-auto mr-2"

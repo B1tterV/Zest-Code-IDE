@@ -4,6 +4,7 @@ import { useFileStore } from '@/entities/file';
 import { useLayoutStore } from '@/entities/layout';
 import { useLoadTree } from '@/features/file-explorer';
 import { getFileIcon } from '@/entities/file';
+import { FileInput } from '@/shared/ui';
 
 export const FileCreationInput: FC<{ level: number }> = ({ level }) => {
   const [name, setName] = useState('');
@@ -33,11 +34,6 @@ export const FileCreationInput: FC<{ level: number }> = ({ level }) => {
     }
   };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') handleConfirm();
-    if (e.key === 'Escape') setCreating(null);
-  };
-
   return (
     <div 
       style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -45,19 +41,10 @@ export const FileCreationInput: FC<{ level: number }> = ({ level }) => {
     >
       <div className="w-4 flex-none" />
       <Icon className="w-4 h-4 flex-none" />
-      <input
-        autoFocus
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        onKeyDown={handleKeyDown}
-        onBlur={() => setCreating(null)}
-        className="
-            bg-transparent
-            border border-accent-teal
-            outline-none text-[13px]
-            w-full px-1 text-white h-4.5
-            rounded-sm
-        "
+      <FileInput
+        onChange={setName}
+        onConfirm={handleConfirm}
+        onCancel={() => setCreating(null)}
       />
     </div>
   );

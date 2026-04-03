@@ -4,16 +4,19 @@ import { FileNode } from './types';
 interface FileState {
   tree: FileNode[];
   isCreating: 'file' | 'folder' | null;
+  isRenaming: string | null;
 
   setTree: (tree: FileNode[]) => void;
   toggleFolder: (path: string, children?: FileNode[]) => void;
   setCreating: (type: 'file' | 'folder' | null) => void;
   removeNode: (path: string) => void;
+  setRenaming: (path: string | null) => void;
 }
 
 export const useFileStore = create<FileState>((set) => ({
   tree: [],
   isCreating: null,
+  isRenaming: null,
 
   setTree: (tree) => set({ tree }),
   toggleFolder: (path, children) => set((state) => ({
@@ -23,6 +26,7 @@ export const useFileStore = create<FileState>((set) => ({
   removeNode: (path: string) => set((state) => ({
     tree: removeRecursive(state.tree, path)
   })),
+  setRenaming: (path: string | null) => set({ isRenaming: path }),
 }));
 
 function updateRecursive(nodes: FileNode[], path: string, children?: FileNode[]): FileNode[] {
