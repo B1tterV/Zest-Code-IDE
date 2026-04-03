@@ -36,3 +36,8 @@ pub async fn create_new_file(path: String) -> Result<(), String> {
 pub async fn create_new_directory(path: String) -> Result<(), String> {
     file_system::create_directory(&path)
 }
+
+#[command]
+pub async fn delete_file_item(path: String) -> Result<(), String> {
+    file_system::remove_item(&path)
+}

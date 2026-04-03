@@ -101,3 +101,12 @@ pub fn create_directory(path: &str) -> Result<(), String> {
     fs::create_dir_all(path).map_err(|e| e.to_string())?;
     Ok(())
 }
+
+pub fn remove_item(path: &str) -> Result<(), String> {
+    let path_buf = std::path::Path::new(path);
+    if path_buf.is_dir() {
+        fs::remove_dir_all(path).map_err(|e| e.to_string())
+    } else {
+        fs::remove_file(path).map_err(|e| e.to_string())
+    }
+}
