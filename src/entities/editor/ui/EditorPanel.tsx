@@ -65,7 +65,8 @@ export const EditorPanel: FC<IDockviewPanelProps> = ({ params }) => {
 
   return (
     <div className="h-full w-full bg-content overflow-hidden rounded-b-xl">
-      <CodeEditor 
+      <CodeEditor
+        path={tabId}
         value={initialData.content || ''} 
         language={getLanguageByExt(initialData.title)} 
         onChange={(newContent) => updateTabContent(tabId, newContent)}

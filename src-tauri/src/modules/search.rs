@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 use serde::Serialize;
+use ignore::WalkBuilder;
 
 #[derive(Serialize)]
 pub struct SearchMatch {
@@ -13,9 +14,10 @@ pub struct SearchMatch {
 pub fn execute_global_search(project_path: &str, query: &str) -> Vec<SearchMatch> {
     let mut results = Vec::new();
     
-    let walker = ignore::WalkBuilder::new(project_path)
-        .hidden(false)
+    let walker = WalkBuilder::new(project_path)
+        .standard_filters(true)
         .git_ignore(true)
+        .hidden(true)
         .build();
 
     for entry in walker.filter_map(|e| e.ok()) {
@@ -27,15 +29,19 @@ pub fn execute_global_search(project_path: &str, query: &str) -> Vec<SearchMatch
             if let Ok(file) = File::open(path) {
                 let reader = BufReader::new(file);
                 for (idx, line) in reader.lines().enumerate() {
-                    if let Ok(content) = line {
-                        if content.contains(query) {
-                            results.push(SearchMatch {
-                                file_path: path.to_string_lossy().to_string(),
-                                line_number: idx + 1,
-                                line_content: content.trim().to_string(),
-                            });
+                    match line {
+                        Ok(content) => {
+                            if content.contains(query) {
+                                results.push(SearchMatch {
+                                    file_path: path.to_string_lossy().to_string(),
+                                    line_number: idx + 1,
+                                    line_content: content.trim().to_string(),
+                                });
+                            }
                         }
+                        Err(_) => break, 
                     }
+                    
                     if results.len() >= 1000 { return results; }
                 }
             }
