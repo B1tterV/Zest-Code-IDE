@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, memo } from 'react';
 import * as monaco from 'monaco-editor';
 import { useEditorStore } from '@/entities/editor';
+import { registerAllSnippets, initMonacoWorkers } from '@/features/intellisense';
 
 interface Props {
   path: string;
@@ -12,6 +13,10 @@ interface Props {
 let isMonacoConfigured = false;
 
 const configureMonaco = () => {
+  if (isMonacoConfigured) return;
+
+  initMonacoWorkers();
+
   const languages = monaco.languages as any;
   
   if (languages.typescript) {
@@ -52,7 +57,7 @@ const configureMonaco = () => {
       { token: 'storage.type', foreground: 'BB86C0' },
     ],
     colors: {
-      'editor.background': '#151515',
+      'editor.background': '#191919',
       'editor.foreground': '#CFCFCF',
       'editorCursor.foreground': '#256C68',
       'editor.lineHighlightBackground': '#1A1A1A',
@@ -61,6 +66,7 @@ const configureMonaco = () => {
     }
   });
 
+  registerAllSnippets();
   isMonacoConfigured = true;
 };
 
