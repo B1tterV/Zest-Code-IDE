@@ -4,6 +4,7 @@ import { ReactComponent as IconClose } from "@/icons/close.svg";
 import { getFileIcon } from '@/entities/file';
 import { cn } from '@/shared/lib/utils';
 import { SearchMatch, useSearchStore } from '@/entities/search';
+import { setTimeout } from 'node:timers/promises';
 
 interface SearchResultItemProps {
   filePath: string;

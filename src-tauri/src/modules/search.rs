@@ -16,7 +16,6 @@ pub fn execute_global_search(project_path: &str, query: &str) -> Vec<SearchMatch
     
     let walker = WalkBuilder::new(project_path)
         .standard_filters(true)
-        .git_ignore(true)
         .hidden(true)
         .build();
 
@@ -29,20 +28,16 @@ pub fn execute_global_search(project_path: &str, query: &str) -> Vec<SearchMatch
             if let Ok(file) = File::open(path) {
                 let reader = BufReader::new(file);
                 for (idx, line) in reader.lines().enumerate() {
-                    match line {
-                        Ok(content) => {
-                            if content.contains(query) {
-                                results.push(SearchMatch {
-                                    file_path: path.to_string_lossy().to_string(),
-                                    line_number: idx + 1,
-                                    line_content: content.trim().to_string(),
-                                });
-                            }
+                    if let Ok(content) = line {
+                        if content.contains(query) {
+                            results.push(SearchMatch {
+                                file_path: path.to_string_lossy().to_string(),
+                                line_number: idx + 1,
+                                line_content: content.trim().to_string(),
+                            });
                         }
-                        Err(_) => break, 
                     }
-                    
-                    if results.len() >= 1000 { return results; }
+                    if results.len() >= 5000 { return results; }
                 }
             }
         }
@@ -52,5 +47,5 @@ pub fn execute_global_search(project_path: &str, query: &str) -> Vec<SearchMatch
 
 fn is_binary_file(path: &Path) -> bool {
     let ext = path.extension().and_then(|s| s.to_str()).unwrap_or("");
-    matches!(ext, "png" | "jpg" | "jpeg" | "gif" | "exe" | "dll" | "so" | "node")
+    matches!(ext, "png" | "jpg" | "jpeg" | "gif" | "exe" | "dll" | "so" | "node" | "ico")
 }
