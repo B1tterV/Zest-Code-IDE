@@ -5,3 +5,4 @@ export { BaseInput } from './inputs/BaseInput';
 export { FileInput } from './inputs/FileInput';
 export { Popover } from './popover/Popover';
 export { CodeEditor } from './editor/CodeEditor';
+export { TerminalViewer } from './terminal/TerminalViewer';

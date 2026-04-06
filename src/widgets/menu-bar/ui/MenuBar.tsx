@@ -4,8 +4,9 @@ import { WindowControls } from '@/features/window-controls';
 import { CommandPaletteTrigger } from '@/features/command-palette';
 import { useAdaptiveMenu } from '@/features/adaptive-menu';
 import { MENU_ITEMS, DropdownMenu, MenuGroup } from '@/entities/menu';
-import { FILE_MENU_GROUPS } from '../config/menu';
+import { FILE_MENU_GROUPS, TERMINAL_MENU_GROUPS } from '../config/menu';
 import { useOpenProject } from '@/features/open-project'
+import { useTerminalStore } from '@/entities/terminal';
 
 export const MenuBar: FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -16,14 +17,22 @@ export const MenuBar: FC = () => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const { visibleItems, overflowItems } = useAdaptiveMenu(headerRef, MENU_ITEMS);
   const { openProject } = useOpenProject();
+  const { addTerminal } = useTerminalStore();
 
   const getMenuGroups = (label: string) => {
     if (label === 'File') return FILE_MENU_GROUPS;
+    if (label === 'Terminal') return TERMINAL_MENU_GROUPS;
     return [];
   };
 
   const handleAction = (id: string) => {
     if (id === 'open_folder') openProject();
+    if (id === 'new_terminal') {
+      addTerminal({ 
+        id: Date.now().toString(), 
+        title: 'Terminal' 
+      });
+    }
     setActiveMenu(null);
   };
 

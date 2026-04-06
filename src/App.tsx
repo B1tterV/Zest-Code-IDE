@@ -7,10 +7,13 @@ import { StatusBar } from '@/widgets/status-bar';
 import { useLayoutStore } from '@/entities/layout';
 import { useGlobalHotkeys } from '@/features/hotkeys';
 import { useAppHydration } from '@/features/app-initializer';
+import { TerminalPanel } from '@/widgets/terminal-panel';
+import { useTerminalStore } from '@/entities/terminal'
 
 const App: FC = () => {
   const activeActivityId = useLayoutStore((s) => s.activeActivityId);
   const isSidebarVisible = useLayoutStore((s) => s.isSidebarVisible);
+  const isTerminalVisible = useTerminalStore(s => s.instances.length > 0);
 
   useGlobalHotkeys();
   useAppHydration();
@@ -35,7 +38,14 @@ const App: FC = () => {
             {isSidebarVisible && (
               <Sidebar title={activeActivityId.toUpperCase()} />
             )}
-            <Workbench />
+            <div className="flex flex-col flex-1 gap-1 overflow-hidden">
+               <Workbench />
+               { isTerminalVisible && (
+                <div className="h-64 border border-border rounded-xl overflow-hidden">
+                  <TerminalPanel />
+                </div>
+               )}
+            </div>
           </div>
         </div>
       </div>
