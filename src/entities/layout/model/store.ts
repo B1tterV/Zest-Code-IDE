@@ -6,8 +6,7 @@ interface LayoutState {
   isSidebarVisible: boolean;
   projectPath: string | null;
   detectedStack: string[];
-  
-  // Actions
+
   setActivity: (id: string) => void;
   toggleSidebar: (force?: boolean) => void;
   setProject: (path: string, deps: string[]) => void;

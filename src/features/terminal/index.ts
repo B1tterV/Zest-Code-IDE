@@ -1,0 +1,1 @@
+export { useTerminal } from './model/use-terminal'
