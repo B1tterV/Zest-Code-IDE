@@ -18,6 +18,11 @@ import { ReactComponent as IconCss } from '@/icons/file-icons/css.svg?skip-color
 import { ReactComponent as IconTailwind } from '@/icons/file-icons/tailwind.svg?skip-colors';
 import { ReactComponent as IconVitest } from '@/icons/file-icons/vitest.svg?skip-colors';
 import { ReactComponent as IconFont } from '@/icons/file-icons/font.svg?skip-colors';
+import { ReactComponent as IconJavaScript } from '@/icons/file-icons/js.svg?skip-colors';
+import { ReactComponent as IconImage } from '@/icons/file-icons/image-photo.svg?skip-colors';
+import { ReactComponent as IconSvg } from '@/icons/file-icons/svg.svg?skip-colors';
+import { ReactComponent as IconScss } from '@/icons/file-icons/scss.svg?skip-colors';
+import { ReactComponent as IconIco } from '@/icons/file-icons/ico.svg?skip-colors';
 
 type IconComponent = FC<SVGProps<SVGSVGElement>>;
 
@@ -35,8 +40,6 @@ export const getFileIcon = (
   if (lowerName.includes('vite.config')) return IconVite;
   if (lowerName.includes('tailwind.config')) return IconTailwind;
   if (lowerName === 'tsconfig.json') return IconTypescriptConfig;
-
-  console.log(stack)
 
   if (ext === 'css') {
     if (stack.includes('tailwindcss')) return IconTailwind;
@@ -66,6 +69,24 @@ export const getFileIcon = (
     case 'woff2':
     case 'eot':
     case 'ttf':  return IconFont;
+    case 'js':  return IconJavaScript;
+    case 'png':
+    case 'apng':
+    case 'gif':
+    case 'webp':
+    case 'avif':
+    case 'heif':
+    case 'heic':
+    case 'jpe':
+    case 'jif':
+    case 'jfif':
+    case 'jfi':
+    case 'jpeg':
+    case 'jpg':  return IconImage;
+    case 'svg':  return IconSvg;
+    case 'sass':
+    case 'scss':  return IconScss;
+    case 'ico':  return IconIco;
     default:     return IconFile;
   }
 };

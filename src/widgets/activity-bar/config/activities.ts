@@ -16,5 +16,5 @@ export const SECONDARY_ACTIVITIES: ActivityItemConfig[] = [
   { id: "settings", icon: IconSettings, tooltip: "Settings" },
 ];
 
-export const ACTIVITY_BAR_WIDTH = 50;
+export const ACTIVITY_BAR_WIDTH = 40;
 export const ACTIVITY_ITEM_SIZE = 40;

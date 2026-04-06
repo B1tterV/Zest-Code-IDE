@@ -25,3 +25,12 @@ export const FILE_MENU_GROUPS: MenuGroup[] = [
     ]
   }
 ]
+
+export const TERMINAL_MENU_GROUPS: MenuGroup[] = [
+  {
+    id: 'new-terminal',
+    items: [
+      { id: 'new_terminal', label: 'New Terminal' },
+    ]
+  }
+]

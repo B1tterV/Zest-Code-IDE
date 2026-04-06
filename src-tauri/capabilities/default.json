@@ -7,6 +7,7 @@
   ],
   "permissions": [
     "core:default",
+    "core:event:default",
     "opener:default",
     "core:window:allow-close",
     "core:window:allow-minimize",
@@ -14,6 +15,9 @@
     "core:window:allow-toggle-maximize",
     "core:window:allow-set-resizable",
     "core:window:allow-start-dragging",
-    "dialog:allow-open"
+    "dialog:allow-open",
+    "dialog:allow-ask",
+    "clipboard-manager:default",
+    "clipboard-manager:allow-write-text"
   ]
 }

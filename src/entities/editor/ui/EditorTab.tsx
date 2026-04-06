@@ -11,6 +11,8 @@ export const EditorTab: FC<IDockviewPanelHeaderProps> = (props) => {
 
   const id = api.id;
   const title = api.title ?? 'Untitled';
+  const tab = useEditorStore(s => s.tabs.find(t => t.id === id));
+  const isDirty = tab?.isDirty;
   
   const activeTabId = useEditorStore((s) => s.activeTabId);
   const closeTab = useEditorStore((s) => s.closeTab);
@@ -19,7 +21,6 @@ export const EditorTab: FC<IDockviewPanelHeaderProps> = (props) => {
   
   const isActive = activeTabId === id;
   
-  // Теперь TS спокоен, так как title гарантированно string
   const Icon = getFileIcon(title, false, false, detectedStack);
 
   const handleClose = (e: React.MouseEvent) => {
@@ -54,15 +55,22 @@ export const EditorTab: FC<IDockviewPanelHeaderProps> = (props) => {
       <Icon className="w-4 h-4 flex-none" />
       <span className="text-[13px] truncate max-w-37.5">{title}</span>
       
-      <button 
-        onClick={handleClose}
-        className={cn(
-          "ml-1 p-0.5 rounded-sm hover:bg-shared transition-opacity",
-          isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+      <div className="w-4 h-4 flex items-center justify-center relative ml-1">
+        {isDirty && (
+          <div className="w-1.5 h-1.5 rounded-full bg-white-gray group-hover:hidden" />
         )}
-      >
-        <IconClose width={14} height={14} />
-      </button>
+        <button 
+          onClick={handleClose}
+          className={cn(
+            "p-0.5 rounded-sm hover:bg-shared transition-all",
+            "opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100",
+            (isActive && !isDirty) && "opacity-100 scale-100",
+            "absolute inset-0 flex items-center justify-center"
+          )}
+        >
+          <IconClose width={14} height={14} className="text-white-gray" />
+        </button>
+      </div>
     </div>
   );
 };

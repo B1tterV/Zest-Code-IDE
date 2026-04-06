@@ -19,16 +19,16 @@ export const ActivityBar: FC = () => {
       )} 
       style={{ width: ACTIVITY_BAR_WIDTH }}
     >
-      <div className="w-10 h-10 bg-transparent flex items-center justify-center flex-none">
+      <div className="w-5 h-5 bg-transparent flex items-center justify-center flex-none">
         <img 
           src={LogoImage} 
           alt="Zest Code" 
-          className="w-7.5 h-7.5 object-contain"
+          className="w-5 h-5 object-contain"
         />
       </div>
 
       {/* Верхняя навигация */}
-      <nav className="flex flex-col items-center w-full pt-4 gap-4" aria-label="Primary">
+      <nav className="flex flex-col items-center w-full pt-4 gap-3" aria-label="Primary">
         {PRIMARY_ACTIVITIES.map((item) => (
           <IconButton
             key={item.id}

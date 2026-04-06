@@ -10,8 +10,10 @@ import {
 } from '../config/sidebar';
 import { useLayoutStore, getProjectName } from '@/entities/layout';
 import { useFileStore } from '@/entities/file';
-import { FileTree } from './FileTree'
-import { FileTreeHeader } from './FileTreeHeader'
+import { FileTree } from '../../../features/file-explorer/ui/FileTree'
+import { FileTreeHeader } from '../../../features/file-explorer/ui/FileTreeHeader'
+import { SearchSidebar } from '@/features/global-search';
+import { ExplorerSidebar } from '@/features/file-explorer';
 
 interface SidebarProps {
   className?: string;
@@ -30,11 +32,19 @@ export const Sidebar: FC<SidebarProps> = ({
 
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isTreeExpanded, setIsTreeExpanded] = useState(true);
-  const projectPath = useLayoutStore(s => s.projectPath);
   const isVisible = useLayoutStore(s => s.isSidebarVisible);
   const tree = useFileStore(s => s.tree);
+  const activeActivityId = useLayoutStore(s => s.activeActivityId);
 
-  if (!isVisible || !projectPath) return null;
+  if (!isVisible) return null;
+
+  const renderContent = () => {
+    switch (activeActivityId) {
+      case 'explorer': return <ExplorerSidebar />;
+      case 'search':   return <SearchSidebar />;
+      default:         return <div className="p-4 text-xs opacity-50 italic">Coming soon...</div>;
+    }
+  };
 
   return (
     <aside
@@ -45,61 +55,28 @@ export const Sidebar: FC<SidebarProps> = ({
         ${className}`
       }
       style={{
-        width,
+        width: SIDEBAR_DEFAULT_WIDTH,
         minWidth: SIDEBAR_MIN_WIDTH,
         maxWidth: SIDEBAR_MAX_WIDTH,
       }}
     >
       <div className="flex items-center pl-5 pr-2.5" style={{ height: SIDEBAR_HEADER_HEIGHT }}>
-        <span className="sidebar-title text-[12px] font-extralight w-full">{title}</span>
+        <span className="sidebar-title text-[12px] font-extralight w-full uppercase tracking-widest opacity-60">
+          {activeActivityId}
+        </span>
         <MoreButton 
           ref={moreBtnRef} 
           isActive={isMoreOpen} 
           onClick={() => setIsMoreOpen(!isMoreOpen)} 
         />
-        <Popover 
-          isOpen={isMoreOpen} 
-          onClose={() => setIsMoreOpen(false)} 
-          anchorRef={moreBtnRef}
-          className="p-1"
-        >
-          None
+        <Popover isOpen={isMoreOpen} onClose={() => setIsMoreOpen(false)} anchorRef={moreBtnRef}>
+           <div className="p-2 text-[11px]">Sidebar Actions</div>
         </Popover>
       </div>
-
-      <FileTreeHeader 
-        title={getProjectName(projectPath)} 
-        isOpen={isTreeExpanded}
-        onToggle={() => setIsTreeExpanded(!isTreeExpanded)}
-      />
-
-      <AnimatePresence initial={false}>
-        {isTreeExpanded && (
-          <motion.div
-            key="file-tree-content"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ 
-              height: 'auto', 
-              opacity: 1,
-              transition: { height: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }, opacity: { duration: 0.15 } } 
-            }}
-            exit={{ 
-              height: 0, 
-              opacity: 0,
-              transition: { height: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }, opacity: { duration: 0.1 } } 
-            }}
-            className="overflow-hidden flex-1"
-          >
-            <div className="flex-1 overflow-y-auto scrollbar-hide py-1">
-              {tree.length > 0 ? (
-                <FileTree nodes={tree} />
-              ) : (
-                <div className="p-4 text-xs text-inactive-gray italic">No folder opened</div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      
+      <div className="flex-1 min-h-0 w-full overflow-y-auto overflow-x-hidden hover:scrollbar-show scrollbar-hide py-1">
+        {renderContent()}
+      </div>
     </aside>
   );
 };

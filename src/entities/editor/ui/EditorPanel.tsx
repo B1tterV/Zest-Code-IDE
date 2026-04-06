@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { IDockviewPanelProps } from 'dockview-react';
 import { CodeEditor } from '@/shared/ui';
 import { useEditorStore } from '../model/store';
@@ -47,9 +47,15 @@ function getLanguageByExt(filename: string): string {
 }
 
 export const EditorPanel: FC<IDockviewPanelProps> = ({ params }) => {
-  const tab = useEditorStore(s => s.tabs.find(t => t.id === params.id));
+  const tabId = params.id;
+  const initialData = useMemo(() => {
+    const t = useEditorStore.getState().tabs.find(it => it.id === tabId);
+    return { title: t?.title, content: t?.content };
+  }, [tabId]);
 
-  if (!tab) {
+  const updateTabContent = useEditorStore(s => s.updateTabContent);
+
+  if (!initialData.title) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-background text-inactive-gray italic text-[13px]">
         Loading file...
@@ -59,9 +65,11 @@ export const EditorPanel: FC<IDockviewPanelProps> = ({ params }) => {
 
   return (
     <div className="h-full w-full bg-content overflow-hidden rounded-b-xl">
-      <CodeEditor 
-        value={tab.content} 
-        language={getLanguageByExt(tab.title)} 
+      <CodeEditor
+        path={tabId}
+        value={initialData.content || ''} 
+        language={getLanguageByExt(initialData.title)} 
+        onChange={(newContent) => updateTabContent(tabId, newContent)}
       />
     </div>
   );

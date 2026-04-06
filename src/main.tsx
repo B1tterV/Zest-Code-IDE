@@ -20,7 +20,7 @@ commandRegistry.register({
   id: 'app.hello',
   label: 'Hello Zest',
   handler: () => {
-    console.log('Welcome to Zest Code IDE v0.1.0!');
+    console.log('Welcome to Zest Code IDE v0.2.0!');
   },
 });
 

@@ -5,13 +5,13 @@ import { ReactComponent as IconRefresh } from '@/icons/refresh.svg'
 import { ReactComponent as IconCollapseAll } from '@/icons/collapse-all.svg'
 import { ReactComponent as IconChevron } from "@/icons/chevron.svg";
 import { cn } from '@/shared/lib/utils';
+import { useFileStore } from '@/entities/file';
+import { useLayoutStore } from '@/entities/layout';
 
 interface FileTreeHeaderProps {
   title: string;
-  isOpen: boolean; // Обязательный проп для состояния
-  onToggle: () => void; // Функция переключения
-  onNewFile?: () => void;
-  onNewFolder?: () => void;
+  isOpen: boolean;
+  onToggle: () => void;
   onRefresh?: () => void;
   onCollapse?: () => void;
 }
@@ -20,12 +20,12 @@ export const FileTreeHeader: FC<FileTreeHeaderProps> = ({
   title, 
   isOpen,
   onToggle,
-  onNewFile, 
-  onNewFolder, 
   onRefresh, 
   onCollapse 
 }) => {
-  // Базовый стиль для кнопок действий
+  const setCreating = useFileStore(s => s.setCreating);
+  const projectPath = useLayoutStore(s => s.projectPath);
+
   const actionBtnClass = "p-1 hover:bg-shared rounded-sm text-inactive-gray hover:text-white-gray transition-colors cursor-pointer";
 
   return (
@@ -47,10 +47,24 @@ export const FileTreeHeader: FC<FileTreeHeaderProps> = ({
       </div>
 
       <div className="flex items-center gap-0.5 opacity-0 group-hover/header:opacity-100 transition-opacity">
-        <button className={actionBtnClass} onClick={onNewFile} title="New File">
+        <button 
+          className={actionBtnClass} 
+          title="New File"
+          onClick={(e) => {
+            e.stopPropagation();
+            setCreating('file', projectPath);
+          }}
+        >
           <IconFileNew width={16} height={16} />
         </button>
-        <button className={actionBtnClass} onClick={onNewFolder} title="New Folder">
+        <button 
+          className={actionBtnClass} 
+          title="New Folder"
+          onClick={(e) => {
+            e.stopPropagation();
+            setCreating('folder', projectPath);
+          }}
+        >
           <IconFolderAdd width={16} height={16} />
         </button>
         <button className={actionBtnClass} onClick={onRefresh} title="Refresh Explorer">
