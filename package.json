@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "cleanup:win": "powershell -ExecutionPolicy Bypass -File ./scripts/cleanup.ps1",
+    "cleanup:unix": "chmod +x ./scripts/cleanup.sh && ./scripts/cleanup.sh"
   },
   "dependencies": {
     "@codingame/monaco-vscode-api": "^30.0.0",
