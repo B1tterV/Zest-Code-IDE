@@ -3,6 +3,7 @@ import { useEditorStore } from '@/entities/editor';
 import { WorkbenchGrid } from './WorkbenchGrid';
 import { WorkbenchEmpty } from './WorkbenchEmpty';
 import './Workbench.css'
+import 'dockview-react/dist/styles/dockview.css';
 
 export const Workbench: FC = () => {
   const hasTabs = useEditorStore((s) => s.tabs.length > 0);
