@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { useEditorStore } from '@/entities/editor';
+import { open } from '@tauri-apps/plugin-dialog';
 
 export const useOpenFile = () => {
   const openTab = useEditorStore(s => s.openTab);
@@ -22,5 +23,17 @@ export const useOpenFile = () => {
     }
   };
 
-  return { openFile };
+  const pickAndOpenFile = async () => {
+    const selected = await open({
+      multiple: false,
+      directory: false,
+    });
+
+    if (selected && typeof selected === 'string') {
+      const name = selected.split(/[\\/]/).pop() || 'Untitled';
+      await openFile(selected, name);
+    }
+  };
+
+  return { openFile, pickAndOpenFile };
 };

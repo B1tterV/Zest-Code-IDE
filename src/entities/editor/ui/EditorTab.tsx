@@ -31,7 +31,7 @@ export const EditorTab: FC<IDockviewPanelHeaderProps> = (props) => {
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return; // Только левая кнопка
+    if (e.button !== 0) return;
 
     if ((props as any).onMouseDown) {
       (props as any).onMouseDown(e);

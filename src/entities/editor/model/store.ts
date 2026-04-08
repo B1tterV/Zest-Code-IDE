@@ -7,6 +7,7 @@ interface EditorState {
   openedIds: string[];
   activeTabId: string | null;
   scrollTarget: { path: string; line: number } | null;
+  autoSaveEnabled: boolean;
 
   openTab: (tab: EditorTab) => void;
   closeTab: (id: string) => void;
@@ -15,6 +16,7 @@ interface EditorState {
   setSaved: (id: string) => void;
   renameTab: (oldId: string, newId: string, newTitle: string) => void;
   setScrollTarget: (target: { path: string; line: number } | null) => void;
+  setAutoSave: (enabled: boolean) => void;
 }
 
 export const useEditorStore = create<EditorState>()(
@@ -24,6 +26,7 @@ export const useEditorStore = create<EditorState>()(
       openedIds: [],
       activeTabId: null,
       scrollTarget: null,
+      autoSaveEnabled: true,
 
       openTab: (tab) =>
         set((state) => {
@@ -76,6 +79,8 @@ export const useEditorStore = create<EditorState>()(
         })),
 
       setScrollTarget: (scrollTarget) => set({ scrollTarget }),
+      
+      setAutoSave: (autoSaveEnabled) => set({ autoSaveEnabled }),
     }),
     {
       name: "zest-editor-storage",

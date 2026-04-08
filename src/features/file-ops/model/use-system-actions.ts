@@ -5,7 +5,6 @@ export const useSystemActions = () => {
   const copyPath = async (path: string) => {
     try {
       await writeText(path);
-      console.log("Path copied to clipboard");
     } catch (e) {
       console.error(e);
     }
