@@ -104,7 +104,8 @@ export const CodeEditor: FC<Props> = memo(({ path, value, language, onChange }) 
       automaticLayout: true,
       fontSize: 13,
       fontFamily: 'Geist Mono',
-      minimap: { enabled: true },
+      minimap: { enabled: false },
+      stickyScroll: { enabled: false },
       scrollbar: { 
         verticalScrollbarSize: 8, 
         horizontalScrollbarSize: 8,

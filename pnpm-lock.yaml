@@ -38,6 +38,9 @@ dependencies:
   clsx:
     specifier: ^2.1.1
     version: 2.1.1
+  dockview:
+    specifier: ^5.2.0
+    version: 5.2.0(react@19.2.4)
   dockview-react:
     specifier: ^5.2.0
     version: 5.2.0(react@19.2.4)

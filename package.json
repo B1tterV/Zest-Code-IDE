@@ -1,7 +1,7 @@
 {
   "name": "zest-code",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,6 +23,7 @@
     "@xterm/xterm": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dockview": "^5.2.0",
     "dockview-react": "^5.2.0",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.7.0",

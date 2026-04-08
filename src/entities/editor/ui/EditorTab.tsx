@@ -24,13 +24,24 @@ export const EditorTab: FC<IDockviewPanelHeaderProps> = (props) => {
   const Icon = getFileIcon(title, false, false, detectedStack);
 
   const handleClose = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     api.close();
     closeTab(id);
   };
 
-  const handleSelect = () => {
-    if ((api as any).setActive) (api as any).setActive();
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return; // Только левая кнопка
+
+    if ((props as any).onMouseDown) {
+      (props as any).onMouseDown(e);
+    }
+  };
+
+  const handleSelect = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    
+    api.setActive();
     setActiveTab(id);
   };
 
@@ -41,16 +52,23 @@ export const EditorTab: FC<IDockviewPanelHeaderProps> = (props) => {
     }
   };
 
+  const onContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log('Open context menu for:', id);
+  };
+
   return (
-    <div 
+    <div
       className={cn(
         "group flex items-center h-full px-2.5 gap-1.5 cursor-pointer select-none border bg-block rounded-sm",
         isActive 
           ? "bg-background border-accent-teal text-white" 
-          : "bg-second-content border-transparent text-inactive-gray hover:bg-block"
+          : "bg-second-content border-transparent text-inactive-gray hover:bg-background"
       )}
       onClick={handleSelect}
       onAuxClick={handleAuxClick}
+      onContextMenu={onContextMenu}
+      onMouseDown={handleMouseDown}
     >
       <Icon className="w-4 h-4 flex-none" />
       <span className="text-[13px] truncate max-w-37.5">{title}</span>
@@ -59,7 +77,8 @@ export const EditorTab: FC<IDockviewPanelHeaderProps> = (props) => {
         {isDirty && (
           <div className="w-1.5 h-1.5 rounded-full bg-white-gray group-hover:hidden" />
         )}
-        <button 
+        <button
+          onMouseDown={(e) => e.stopPropagation()}
           onClick={handleClose}
           className={cn(
             "p-0.5 rounded-sm hover:bg-shared transition-all",

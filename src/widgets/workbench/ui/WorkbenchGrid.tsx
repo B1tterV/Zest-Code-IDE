@@ -1,50 +1,111 @@
-import { FC, useCallback, useRef, useEffect } from 'react';
+import { FC, useCallback, useRef, useEffect, useState } from 'react';
 import { DockviewReact, type DockviewReadyEvent, type DockviewApi } from 'dockview-react';
 import { EditorPanel, EditorTab, useEditorStore } from '@/entities/editor';
+
+const components = {
+  editor: EditorPanel,
+};
 
 const tabComponents = {
   default: EditorTab,
 };
 
 export const WorkbenchGrid: FC = () => {
-  const dockviewApi = useRef<DockviewApi | null>(null);
+  // const dockviewApi = useRef<DockviewApi | null>(null);
+  const [dockviewApi, setApi] = useState<DockviewApi>();
+  const isRestoring = useRef(false);
 
   const openedIds = useEditorStore(s => s.openedIds);
   const activeTabId = useEditorStore((s) => s.activeTabId);
   const tabs = useEditorStore(s => s.tabs);
 
   const handleReady = useCallback((event: DockviewReadyEvent) => {
-    dockviewApi.current = event.api;
+    setApi(event.api);
+
+    event.api.onWillDragPanel((e) => {
+      console.log("onWillDragPanel", e)
+    })
+
+    event.api.onWillDragGroup((e) => {
+      console.log("onWillDragGroup", e)
+    })
+
+    event.api.onWillShowOverlay((e) => {
+      if (e.kind === 'header_space' || e.kind === 'tab') {
+        e.preventDefault();
+      }
+    })
+
+    event.api.onWillDrop((e) => {
+      console.log("onWillDrop", e)
+    })
+
+    event.api.onDidDrop((e) => {
+      console.log("onDidDrop", e)
+    })
+
+    const savedLayout = localStorage.getItem('zest-workbench-layout');
+    if (savedLayout) {
+      isRestoring.current = true;
+      try {
+        event.api.fromJSON(JSON.parse(savedLayout));
+      } catch (e) {
+        console.error("Failed to restore layout", e);
+      } finally {
+        isRestoring.current = false;
+      }
+    }
+
+    event.api.onDidLayoutChange(() => {
+      if (!isRestoring.current) {
+        const layout = event.api.toJSON();
+        localStorage.setItem('zest-workbench-layout', JSON.stringify(layout));
+      }
+    });
   }, []);
 
   useEffect(() => {
-    if (!dockviewApi.current) return;
+    if (!dockviewApi || isRestoring.current) return;
 
     openedIds.forEach((id) => {
-      if (!dockviewApi.current?.getPanel(id)) {
+      const existingPanel = dockviewApi?.getPanel(id);
+      if (!existingPanel) {
         const tabData = tabs.find(t => t.id === id);
-        dockviewApi.current?.addPanel({
-          id,
-          title: tabData?.title || 'Untitled',
-          component: 'editor',
-          tabComponent: 'default',
-          params: { id }
-        });
+        if (tabData) {
+          dockviewApi?.addPanel({
+            id,
+            title: tabData.title,
+            component: 'editor',
+            tabComponent: 'default',
+            params: { id },
+          });
+        }
       }
     });
 
     if (activeTabId) {
-      dockviewApi.current.getPanel(activeTabId)?.api.setActive();
+      const panel = dockviewApi.getPanel(activeTabId);
+      if (panel && !panel.api.isActive) {
+        panel.api.setActive();
+      }
     }
-  }, [openedIds, activeTabId]);
+  }, [openedIds, activeTabId, tabs]);
 
   return (
-    <div className="h-full w-full rounded-xl">
+    <div className="h-full w-full rounded-xl overflow-hidden bg-second-content">
       <DockviewReact
-        components={{ editor: EditorPanel }}
+        components={components}
         tabComponents={tabComponents}
         onReady={handleReady}
-        className="dockview dockview-theme-dark h-full w-full rounded-xl"
+        tabAnimation="smooth"
+        disableTabsOverflowList
+        className="dockview dockview-theme-dark h-full w-full"
+        hideBorders
+        dndEdges={{
+          size: { type: "pixels", value: 100 },
+          activationSize: { type: "percentage", value: 0 },
+
+        }}
       />
     </div>
   );
