@@ -1,7 +1,7 @@
+use ignore::WalkBuilder;
+use serde::Serialize;
 use std::fs;
 use std::path::Path;
-use serde::Serialize;
-use ignore::WalkBuilder;
 
 #[derive(Serialize)]
 pub struct TypeDefinition {
@@ -12,8 +12,10 @@ pub struct TypeDefinition {
 pub fn get_local_types(project_path: &str) -> Vec<TypeDefinition> {
     let mut types = Vec::new();
     let nm_path = Path::new(project_path).join("node_modules");
-    
-    if !nm_path.exists() { return types; }
+
+    if !nm_path.exists() {
+        return types;
+    }
 
     let walker = WalkBuilder::new(nm_path)
         .standard_filters(true)
@@ -24,7 +26,8 @@ pub fn get_local_types(project_path: &str) -> Vec<TypeDefinition> {
         let path = entry.path();
         if path.is_file() && path.to_string_lossy().ends_with(".d.ts") {
             if let Ok(content) = fs::read_to_string(path) {
-                let relative_path = path.to_string_lossy()
+                let relative_path = path
+                    .to_string_lossy()
                     .split("node_modules")
                     .last()
                     .unwrap_or("")
@@ -36,7 +39,9 @@ pub fn get_local_types(project_path: &str) -> Vec<TypeDefinition> {
                 });
             }
         }
-        if types.len() > 5000 { break; }
+        if types.len() > 5000 {
+            break;
+        }
     }
     types
 }
