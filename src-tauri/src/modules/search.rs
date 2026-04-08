@@ -1,8 +1,8 @@
+use ignore::WalkBuilder;
+use serde::Serialize;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
-use serde::Serialize;
-use ignore::WalkBuilder;
 
 #[derive(Serialize)]
 pub struct SearchMatch {
@@ -13,7 +13,7 @@ pub struct SearchMatch {
 
 pub fn execute_global_search(project_path: &str, query: &str) -> Vec<SearchMatch> {
     let mut results = Vec::new();
-    
+
     let walker = WalkBuilder::new(project_path)
         .standard_filters(true)
         .hidden(true)
@@ -21,9 +21,11 @@ pub fn execute_global_search(project_path: &str, query: &str) -> Vec<SearchMatch
 
     for entry in walker.filter_map(|e| e.ok()) {
         let path = entry.path();
-        
+
         if path.is_file() {
-            if is_binary_file(path) { continue; }
+            if is_binary_file(path) {
+                continue;
+            }
 
             if let Ok(file) = File::open(path) {
                 let reader = BufReader::new(file);
@@ -37,7 +39,9 @@ pub fn execute_global_search(project_path: &str, query: &str) -> Vec<SearchMatch
                             });
                         }
                     }
-                    if results.len() >= 5000 { return results; }
+                    if results.len() >= 5000 {
+                        return results;
+                    }
                 }
             }
         }
@@ -47,5 +51,8 @@ pub fn execute_global_search(project_path: &str, query: &str) -> Vec<SearchMatch
 
 fn is_binary_file(path: &Path) -> bool {
     let ext = path.extension().and_then(|s| s.to_str()).unwrap_or("");
-    matches!(ext, "png" | "jpg" | "jpeg" | "gif" | "exe" | "dll" | "so" | "node" | "ico")
+    matches!(
+        ext,
+        "png" | "jpg" | "jpeg" | "gif" | "exe" | "dll" | "so" | "node" | "ico"
+    )
 }

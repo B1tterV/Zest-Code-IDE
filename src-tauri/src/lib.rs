@@ -2,19 +2,22 @@ mod commands;
 mod core;
 mod modules;
 
-use std::sync::{Arc, Mutex};
 use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             core::setup::init(app)?;
             Ok(())
         })
-        .manage(modules::terminal::TerminalState(Arc::new(Mutex::new(HashMap::new()))))
+        .manage(modules::terminal::TerminalState(Arc::new(Mutex::new(
+            HashMap::new(),
+        ))))
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             commands::project::open_project_picker,

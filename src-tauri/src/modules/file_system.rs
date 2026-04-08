@@ -132,9 +132,7 @@ pub fn copy_item(source: &str, destination: &str) -> Result<(), String> {
     if src.is_dir() {
         copy_dir_recursive(src, dst).map_err(|e| e.to_string())
     } else {
-        fs::copy(src, dst)
-            .map_err(|e| e.to_string())
-            .map(|_| ())
+        fs::copy(src, dst).map_err(|e| e.to_string()).map(|_| ())
     }
 }
 

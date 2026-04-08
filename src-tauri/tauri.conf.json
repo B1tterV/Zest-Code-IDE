@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "Zest Code",
         "width": 1000,
         "height": 800,
