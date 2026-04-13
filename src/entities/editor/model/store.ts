@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { EditorTab } from "./types";
 import { persist } from "zustand/middleware";
+import { DockviewApi } from "dockview";
 
 interface EditorState {
   tabs: EditorTab[];
@@ -8,6 +9,7 @@ interface EditorState {
   activeTabId: string | null;
   scrollTarget: { path: string; line: number } | null;
   autoSaveEnabled: boolean;
+  dockviewApi: DockviewApi | null;
 
   openTab: (tab: EditorTab) => void;
   closeTab: (id: string) => void;
@@ -17,6 +19,7 @@ interface EditorState {
   renameTab: (oldId: string, newId: string, newTitle: string) => void;
   setScrollTarget: (target: { path: string; line: number } | null) => void;
   setAutoSave: (enabled: boolean) => void;
+  setDockviewApi: (api: DockviewApi) => void;
 }
 
 export const useEditorStore = create<EditorState>()(
@@ -27,6 +30,7 @@ export const useEditorStore = create<EditorState>()(
       activeTabId: null,
       scrollTarget: null,
       autoSaveEnabled: true,
+      dockviewApi: null,
 
       openTab: (tab) =>
         set((state) => {
@@ -42,12 +46,26 @@ export const useEditorStore = create<EditorState>()(
 
       setActiveTab: (id) => set({ activeTabId: id }),
 
-      closeTab: (id) =>
+      closeTab: (id: string) =>
         set((state) => {
+          console.log('🔹 closeTab called with id:', id);
+          console.log('🔹 Current tabs:', state.tabs.map(t => t.id));
+          console.log('🔹 Current openedIds:', state.openedIds);
+          
           const newTabs = state.tabs.filter((t) => t.id !== id);
+          const newOpenedIds = state.openedIds.filter((oid) => oid !== id);
+          
+          console.log('🔹 New tabs:', newTabs.map(t => t.id));
+          console.log('🔹 New openedIds:', newOpenedIds);
+          
+          // ✅ Проверка: действительно ли что-то изменилось?
+          if (newTabs.length === state.tabs.length) {
+            console.warn('⚠️ Tab NOT removed - ID mismatch?');
+          }
+          
           return {
             tabs: newTabs,
-            openedIds: state.openedIds.filter((oid) => oid !== id),
+            openedIds: newOpenedIds,
             activeTabId:
               state.activeTabId === id
                 ? newTabs[0]?.id || null
@@ -72,7 +90,7 @@ export const useEditorStore = create<EditorState>()(
       renameTab: (oldId: string, newId: string, newTitle: string) =>
         set((state) => ({
           tabs: state.tabs.map((t) =>
-            t.id === oldId ? { ...t, id: newId, title: newTitle } : t,
+            t.id === oldId ? { ...t, id: newId, title: newTitle, isVirtual: false } : t,
           ),
           openedIds: state.openedIds.map((id) => (id === oldId ? newId : id)),
           activeTabId: state.activeTabId === oldId ? newId : state.activeTabId,
@@ -81,6 +99,8 @@ export const useEditorStore = create<EditorState>()(
       setScrollTarget: (scrollTarget) => set({ scrollTarget }),
       
       setAutoSave: (autoSaveEnabled) => set({ autoSaveEnabled }),
+
+      setDockviewApi: (api) => set({ dockviewApi: api })
     }),
     {
       name: "zest-editor-storage",

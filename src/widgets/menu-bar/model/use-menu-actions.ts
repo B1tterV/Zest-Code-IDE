@@ -10,7 +10,7 @@ export const useMenuActions = () => {
   const { addTerminal } = useTerminalStore();
   const { autoSaveEnabled, activeTabId, setAutoSave, closeTab } = useEditorStore();
   const { saveActiveFile, saveAs, saveAll, revertFile } = useSaveFile();
-  const { createNewTextFile } = useCreateFile();
+  const { createNewTextFile, createNewFileOnDisk } = useCreateFile();
 
   const handleFileAction = (id: string) => {
     switch (id) {
@@ -22,6 +22,7 @@ export const useMenuActions = () => {
       case 'auto_save': setAutoSave(!autoSaveEnabled); break;
       case 'revert_file': revertFile(); break;
       case 'new_text_file': createNewTextFile(); break;
+      case 'new_file': createNewFileOnDisk(); break;
       case 'close_editor': if (activeTabId) closeTab(activeTabId); break;
       case 'exit': window.close(); break;
     }

@@ -1,17 +1,12 @@
 import { FC , useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Popover, MoreButton } from '@/shared/ui';
 import {
   SIDEBAR_DEFAULT_WIDTH,
   SIDEBAR_MIN_WIDTH,
   SIDEBAR_MAX_WIDTH,
   SIDEBAR_HEADER_HEIGHT,
-  DEFAULT_SIDEBAR_TITLE,
 } from '../config/sidebar';
-import { useLayoutStore, getProjectName } from '@/entities/layout';
-import { useFileStore } from '@/entities/file';
-import { FileTree } from '../../../features/file-explorer/ui/FileTree'
-import { FileTreeHeader } from '../../../features/file-explorer/ui/FileTreeHeader'
+import { useLayoutStore } from '@/entities/layout';
 import { SearchSidebar } from '@/features/global-search';
 import { ExplorerSidebar } from '@/features/file-explorer';
 
@@ -25,15 +20,11 @@ interface SidebarProps {
 
 export const Sidebar: FC<SidebarProps> = ({
   className = '',
-  width = SIDEBAR_DEFAULT_WIDTH,
-  title = DEFAULT_SIDEBAR_TITLE,
 }) => {
   const moreBtnRef = useRef<HTMLButtonElement>(null);
 
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const [isTreeExpanded, setIsTreeExpanded] = useState(true);
   const isVisible = useLayoutStore(s => s.isSidebarVisible);
-  const tree = useFileStore(s => s.tree);
   const activeActivityId = useLayoutStore(s => s.activeActivityId);
 
   if (!isVisible) return null;

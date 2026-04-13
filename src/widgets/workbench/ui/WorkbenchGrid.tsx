@@ -18,9 +18,11 @@ export const WorkbenchGrid: FC = () => {
   const openedIds = useEditorStore(s => s.openedIds);
   const activeTabId = useEditorStore((s) => s.activeTabId);
   const tabs = useEditorStore(s => s.tabs);
+  const { setDockviewApi } = useEditorStore()
 
   const handleReady = useCallback((event: DockviewReadyEvent) => {
     setApi(event.api);
+    setDockviewApi(event.api);
 
     event.api.onWillDragPanel((e) => {
       console.log("onWillDragPanel", e)
@@ -80,6 +82,12 @@ export const WorkbenchGrid: FC = () => {
             params: { id },
           });
         }
+      }
+    });
+
+    dockviewApi.panels.forEach((panel) => {
+      if (!openedIds.includes(panel.id)) {
+        panel.api.close();
       }
     });
 

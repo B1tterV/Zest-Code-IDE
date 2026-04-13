@@ -32,7 +32,7 @@ export const EditorPanel: FC<IDockviewPanelProps> = ({ api, params }) => {
   }, [api, tabId, setActiveTab]);
 
   useEffect(() => {
-    if (autoSaveEnabled && tab?.isDirty && !tab.id.startsWith('untitled-')) {
+    if (autoSaveEnabled && tab?.isDirty && !tab.isVirtual) {
       const timer = setTimeout(() => {
         saveActiveFile();
       }, AUTO_SAVE_INTERVAL);

@@ -3,4 +3,5 @@ export interface EditorTab {
   title: string;
   content: string;
   isDirty: boolean;
+  isVirtual?: boolean;
 }
