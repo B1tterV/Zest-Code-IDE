@@ -2,43 +2,9 @@ import { FC, useEffect } from 'react';
 import { IDockviewPanelProps } from 'dockview-react';
 import { CodeEditor } from '@/shared/ui';
 import { useEditorStore } from '../model/store';
-
-const LANGUAGE_MAP: Record<string, string> = {
-  // Frontend
-  'tsx': 'typescript',
-  'ts': 'typescript',
-  'jsx': 'javascript',
-  'js': 'javascript',
-  'html': 'html',
-  'css': 'css',
-  'scss': 'scss',
-  'less': 'less',
-  'vue': 'html',
-  
-  // Backend & Systems
-  'rs': 'rust',
-  'py': 'python',
-  'cpp': 'cpp',
-  'cc': 'cpp',
-  'h': 'cpp',
-  'hpp': 'cpp',
-  'cs': 'csharp',
-  'go': 'go',
-  'java': 'java',
-  'php': 'php',
-  'sql': 'sql',
-
-  // Configs & Data
-  'json': 'json',
-  'md': 'markdown',
-  'yaml': 'yaml',
-  'yml': 'yaml',
-  'toml': 'toml',
-  'xml': 'xml',
-  'bat': 'bat',
-  'sh': 'shell',
-  'dockerfile': 'dockerfile',
-};
+import { useSaveFile } from '@/features/file-ops';
+import { LANGUAGE_MAP } from '../config/languages';
+import { AUTO_SAVE_INTERVAL } from '../config/settings'
 
 function getLanguageByExt(filename: string): string {
   const ext = filename.split('.').pop()?.toLowerCase();
@@ -49,6 +15,8 @@ function getLanguageByExt(filename: string): string {
 export const EditorPanel: FC<IDockviewPanelProps> = ({ api, params }) => {
   const tabId = params.id;
   const tab = useEditorStore(s => s.tabs.find(t => t.id === tabId));
+  const { saveActiveFile } = useSaveFile();
+  const { autoSaveEnabled } = useEditorStore();
 
   const updateTabContent = useEditorStore(s => s.updateTabContent);
   const setActiveTab = useEditorStore(s => s.setActiveTab);
@@ -62,6 +30,15 @@ export const EditorPanel: FC<IDockviewPanelProps> = ({ api, params }) => {
 
     return () => disposable.dispose();
   }, [api, tabId, setActiveTab]);
+
+  useEffect(() => {
+    if (autoSaveEnabled && tab?.isDirty && !tab.isVirtual) {
+      const timer = setTimeout(() => {
+        saveActiveFile();
+      }, AUTO_SAVE_INTERVAL);
+      return () => clearTimeout(timer);
+    }
+  }, [tab?.content]);
 
   if (!tab) {
     return (

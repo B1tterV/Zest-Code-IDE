@@ -1,4 +1,3 @@
-import { useEditorStore } from '@/entities/editor';
 import { useClipboardStore, useFileStore } from '@/entities/file';
 import { useLayoutStore } from '@/entities/layout';
 import { useLoadTree } from '@/features/file-explorer';
@@ -6,10 +5,7 @@ import { useDeleteFile, useSystemActions } from '@/features/file-ops';
 import { invoke } from '@tauri-apps/api/core';
 
 export const useFileTreeActions = () => {
-  const projectPath = useLayoutStore(s => s.projectPath);
-
-  const { setRenaming, setCreating, updateFolderChildren, setCutPath, setTree } = useFileStore();
-  const { renameTab } = useEditorStore.getState();
+  const { setRenaming, setCreating, setCutPath, setTree } = useFileStore();
   const { copyPath, revealInExplorer } = useSystemActions();
   const { setCopy, setCut } = useClipboardStore();
   const { expandFolder } = useLoadTree();

@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { ReactComponent as IconChevron } from "@/icons/chevron.svg";
-import { ReactComponent as IconCheckmarkSmall } from "@/icons/checkmark-small.svg";
+import { ReactComponent as IconChevron } from "@/icons/chevron.svg?skip-colors";
+import { ReactComponent as IconCheckmarkSmall } from "@/icons/checkmark-small.svg?skip-colors";
 import { MenuGroup } from '../model/types'
 import { Popover } from '@/shared/ui';
 
@@ -35,7 +35,7 @@ export const DropdownMenu: FC<Props> = ({
               onClick={() => !item.submenuGroups && onAction(item.id)}
             >
               <div className="w-5 flex-none">
-                {item.checked && <IconCheckmarkSmall className="w-3.5 h-3.5" />}
+                {item.checked && <IconCheckmarkSmall className="w-3.5 h-3.5 text-white"/>}
               </div>
               
               <span className="flex-1 truncate">{item.label}</span>
@@ -48,7 +48,7 @@ export const DropdownMenu: FC<Props> = ({
 
               {item.submenuGroups && (
 								<>
-									<IconChevron className="ml-2 w-3.5 h-3.5 opacity-50 -rotate-90" />
+									<IconChevron className="ml-2 w-3.5 h-3.5 opacity-50 -rotate-90 text-white"/>
 									<div className="hidden group-hover:block absolute left-[calc(100%-4px)] -top-1.5 pl-1">
 										<DropdownMenu
 											groups={item.submenuGroups}

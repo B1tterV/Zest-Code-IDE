@@ -5,6 +5,8 @@ import { useLayoutStore } from '@/entities/layout';
 import { useEditorStore } from '../model/store';
 import { ReactComponent as IconClose } from '@/icons/close.svg';
 import { cn } from '@/shared/lib/utils';
+import { ask } from '@tauri-apps/plugin-dialog';
+import { useSaveFile } from '@/features/file-ops';
 
 export const EditorTab: FC<IDockviewPanelHeaderProps> = (props) => {
   const { api } = props;
@@ -17,21 +19,39 @@ export const EditorTab: FC<IDockviewPanelHeaderProps> = (props) => {
   const activeTabId = useEditorStore((s) => s.activeTabId);
   const closeTab = useEditorStore((s) => s.closeTab);
   const setActiveTab = useEditorStore((s) => s.setActiveTab);
+  const { saveActiveFile } = useSaveFile();
   const detectedStack = useLayoutStore((s) => s.detectedStack);
   
   const isActive = activeTabId === id;
   
   const Icon = getFileIcon(title, false, false, detectedStack);
 
-  const handleClose = (e: React.MouseEvent) => {
+  const handleClose = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (isDirty) {
+      const answer = await ask(
+        `Do you want to save the changes to the file "${title}"?`, 
+        { 
+          title: 'Zest Code',
+          kind: 'warning',
+          okLabel: 'Save',
+          cancelLabel: 'Close'
+        }
+      );
+      
+      if (answer) {
+        await saveActiveFile();
+      }
+    }
+
     api.close();
     closeTab(id);
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return; // Только левая кнопка
+    if (e.button !== 0) return;
 
     if ((props as any).onMouseDown) {
       (props as any).onMouseDown(e);
